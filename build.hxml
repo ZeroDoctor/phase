@@ -1,0 +1,11 @@
+
+-cp src
+-lib heaps
+
+#-js bin/js/index.js
+
+-lib hlsdl
+-hl bin/hl/index.hl
+
+-main Main
+-debug
