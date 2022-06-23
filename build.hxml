@@ -2,8 +2,10 @@
 -cp src
 -lib heaps
 
+# js compilation
 #-js bin/js/index.js
 
+# hl compliation
 -lib hlsdl
 -hl bin/hl/index.hl
 
