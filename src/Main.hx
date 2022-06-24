@@ -14,7 +14,7 @@ class Main extends hxd.App {
 
     hxd.Res.loader = new hxd.res.Loader(hxd.fs.EmbedFileSystem.create());
 
-    sm = new StateManager(new PlayState(this.s2d));
+    sm = new StateManager(this.s2d);
     hxd.Window.getInstance().addEventTarget(this.input);
     
     sm.init();

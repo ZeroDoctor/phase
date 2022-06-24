@@ -6,9 +6,8 @@ class StateManager {
 
   private var states:GenericStack<State>;
   
-  public function new(initState:State) {
+  public function new(scene2d:h2d.Scene) {
     states = new GenericStack<State>();
-    states.add(initState);
   }
 
   public function init():Void {
