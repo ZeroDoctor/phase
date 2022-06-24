@@ -1,5 +1,6 @@
 
 -cp src
+-D resourcesPath=assets
 -lib heaps
 
 # js compilation
