@@ -22,7 +22,7 @@ The Phase. It's said the last thing you'll ever see is _____. Some will thrive, 
 Post apocalyptic worlds meets post apocalyptic worlds battling it out for each other reasource. 
 No sense nonsense about nonsensical worlds. 
 
-No teddy bears here. Okay maybe, like one
+No teddy bears here. Okay maybe like one
 
 - Punks
   - Steampunk
