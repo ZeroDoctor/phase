@@ -40,7 +40,7 @@ No teddy bears here. Okay maybe like one
 
 - Okay, okay I get it. Your insanse and the concept doesn't make sense at all - Low End VP aka Local Starbucks Barista
 
-  Thats a very good point! As a up and coming company we thrive on question like this...
+  Thats a very good point! As a up and coming company we thrive on questions like this...
 
 - You need to leave. - Starbucks Manager
 
