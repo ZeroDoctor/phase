@@ -1,4 +1,5 @@
 
+import state.State;
 import state.PlayState;
 import state.StateManager;
 
@@ -16,6 +17,9 @@ class Main extends hxd.App {
 
     sm = new StateManager(this.s2d);
     hxd.Window.getInstance().addEventTarget(this.input);
+
+    var playState:State = new PlayState(this.s2d);
+    sm.pushState(playState);
     
     sm.init();
   }
@@ -27,6 +31,7 @@ class Main extends hxd.App {
   }
 
   public override function render(e:h3d.Engine) {
+    e.clear(0x3838D8);
     super.render(e);
 
     sm.render(e);

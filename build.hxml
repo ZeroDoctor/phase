@@ -4,11 +4,11 @@
 -lib heaps
 
 # js compilation
-#-js bin/js/index.js
+-js bin/js/index.js
 
 # hl compliation
--lib hlsdl
--hl bin/hl/index.hl
+# -lib hlsdl
+# -hl bin/hl/index.hl
 
 -main Main
 -debug
