@@ -1,5 +1,5 @@
 
-import state.State;
+import state.IState;
 import state.PlayState;
 import state.StateManager;
 
@@ -18,7 +18,7 @@ class Main extends hxd.App {
     sm = new StateManager(this.s2d);
     hxd.Window.getInstance().addEventTarget(this.input);
 
-    var playState:State = new PlayState(this.s2d);
+    var playState:IState = new PlayState(this.s2d);
     sm.pushState(playState);
     
     sm.init();

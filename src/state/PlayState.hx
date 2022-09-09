@@ -2,7 +2,7 @@ package state;
 
 import hxd.res.DefaultFont;
 
-class PlayState implements State {
+class PlayState implements IState {
   private var scene:h2d.Scene;
   private var g:h2d.Graphics;
   private var fps:h2d.Text;
@@ -21,6 +21,7 @@ class PlayState implements State {
 
   public function init(sm:StateManager):Void {
     trace("init playstate...");
+    
   }
   
   public function update(dt:Float):Void {
@@ -29,6 +30,7 @@ class PlayState implements State {
 
   public function render(e:h3d.Engine):Void {
     fps.text = "fps: "+Std.string(e.fps);
+
   }
 
   public function input(event:hxd.Event):Void {
