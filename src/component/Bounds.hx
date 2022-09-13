@@ -1,6 +1,6 @@
 package component;
 
-class Bounds {
+class Bounds implements IComponent {
     public var x:Float;
     public var y:Float;
     public var z:Float;

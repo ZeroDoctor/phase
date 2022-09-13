@@ -6,7 +6,7 @@ enum SHAPE {
     Rect;
 }
 
-class RenderGeometry {
+class RenderGeometry implements IComponent {
     public var shape:SHAPE;
     public var draw:()->Void;
     public var color:Int;

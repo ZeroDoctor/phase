@@ -1,7 +1,7 @@
 package system;
 
 class RenderSystem {
-    public function new():Void {
-
+    function new(scene:h2d.Object):Void {
+        
     }
 }
