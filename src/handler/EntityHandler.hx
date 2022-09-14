@@ -1,31 +1,32 @@
 package handler;
 
 class EntityHandler {
-    private var entities:Array<Entity>;
-    private var idCount:Int;
+    private var deadEntities:Array<Int>;
+    private var entitiesCount:Int;
 
     public function new():Void {
-        this.entities = new Array<Entity>();
+        this.deadEntities = new Array<Int>();
     }
 
-    public function createEntity():Entity { 
-        var index:Int = this.entities.length+1;
-
-        var e:Entity = new Entity(index, idCount++);
-        this.entities.push(e);
-
-        return e;
+    public function getEntitesCount():Int { 
+        return this.entitiesCount;
     }
 
-    public function destoryEntity(id:Int):Void {}
-}
+    public function isAlive(id:Int):Bool {
+        return id > 0 &&
+            id <= this.entitiesCount && 
+            !this.deadEntities.contains(id);
+    }
 
-class Entity {
-   public var id:Int; 
-   public var index:Int;
+    public function createEntity():Int { 
+        if (this.deadEntities.length <= 0) {
+            return ++this.entitiesCount;
+        }
 
-   public function new(id:Int, index:Int):Void { 
-        this.id = id;
-        this.index = index;
-   }
+        return this.deadEntities.pop();
+    }
+
+    public function killEntity(id:Int):Void {
+        this.deadEntities.push(id);
+    }
 }
