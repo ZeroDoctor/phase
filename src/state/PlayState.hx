@@ -1,5 +1,7 @@
 package state;
 
+import component.RenderGeometry;
+import component.Bounds;
 import system.RenderGeometrySystem;
 import haxe.macro.Type.AnonType;
 import handler.SystemHandler;
@@ -41,6 +43,30 @@ class PlayState implements IState {
     this.systemHandler = new SystemHandler(sceneHandler);
 
     systemHandler.register(new RenderGeometrySystem(sceneHandler));
+
+    var entity:Int = sceneHandler.createEntity();
+    sceneHandler.assignComponent(entity, new Bounds({
+      x: 10.0, y: 50.0, z: 0.0,
+      width: 25.0, height: 25.0, length: 0.0,
+      radius: 0.0, radiusX: 0.0, radiusY: 0.0,
+      originIsCenter: false
+    }));
+
+    sceneHandler.assignComponent(entity, new RenderGeometry({
+      shape: SHAPE.Rect, color: 0xDA0D0D
+    }));
+
+    entity = sceneHandler.createEntity();
+    sceneHandler.assignComponent(entity, new Bounds({
+      x: 45.0, y: 50.0, z: 0.0,
+      width: 25.0, height: 25.0, length: 0.0,
+      radius: 0.0, radiusX: 0.0, radiusY: 0.0,
+      originIsCenter: false
+    }));
+
+    sceneHandler.assignComponent(entity, new RenderGeometry({
+      shape: SHAPE.Rect, color: 0x0DDA0D
+    }));
   }
   
   public function update(dt:Float):Void {

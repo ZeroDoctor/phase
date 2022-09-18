@@ -14,6 +14,7 @@ class SceneHandler {
         this.entityHandler = new EntityHandler();
         this.componentHandler = new ComponentHandler();
         this.scene = scene;
+        this.g = g;
     }
 
     public function getScene():h2d.Scene {
