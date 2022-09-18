@@ -8,11 +8,20 @@ class SceneHandler {
     private var entityHandler:EntityHandler;
     private var componentHandler:ComponentHandler;
     private var scene:h2d.Scene;
+    private var g:h2d.Graphics;
 
-    public function new(scene:h2d.Scene):Void {
+    public function new(scene:h2d.Scene, g:h2d.Graphics):Void {
         this.entityHandler = new EntityHandler();
         this.componentHandler = new ComponentHandler();
         this.scene = scene;
+    }
+
+    public function getScene():h2d.Scene {
+        return this.scene;
+    }
+
+    public function getGraphics():h2d.Graphics {
+        return this.g;
     }
 
     public function getEntitiesCount():Int {
