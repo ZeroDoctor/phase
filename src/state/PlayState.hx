@@ -1,5 +1,8 @@
 package state;
 
+import system.RenderGeometrySystem;
+import haxe.macro.Type.AnonType;
+import handler.SystemHandler;
 import handler.SceneHandler;
 import hxd.res.DefaultFont;
 
@@ -11,6 +14,7 @@ class PlayState implements IState {
   private var drawCallText:h2d.Text;
   
   private var sceneHandler:SceneHandler;
+  private var systemHandler:SystemHandler;
 
   public function new(scene:h2d.Scene) {
     this.scene = scene;
@@ -33,16 +37,20 @@ class PlayState implements IState {
     this.scene.addChild(fpsText);
     this.scene.addChild(drawCallText);
 
-    this.sceneHandler = new SceneHandler(scene);
+    this.sceneHandler = new SceneHandler(scene, g);
+    this.systemHandler = new SystemHandler(sceneHandler);
+
+    systemHandler.register(new RenderGeometrySystem(sceneHandler));
   }
   
   public function update(dt:Float):Void {
-
+    systemHandler.update(dt);
   }
 
   public function render(e:h3d.Engine):Void {
     fpsText.text = "fps: "+Std.string(e.fps);
     drawCallText.text = "draw calls: "+Std.string(e.drawCalls);
+    systemHandler.render(e);
   }
 
   public function input(event:hxd.Event):Void {
