@@ -1,4 +1,5 @@
 
+import test.EntityTest;
 import state.IState;
 import state.PlayState;
 import state.StateManager;
@@ -42,6 +43,7 @@ class Main extends hxd.App {
   }
 
   public static function main():Void {
+    new EntityTest();
     new Main();
   }
 }

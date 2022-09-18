@@ -1,7 +1,9 @@
 package system;
 
+import handler.SceneHandler;
+
 class RenderSystem {
-    function new(scene:h2d.Object):Void {
+    function new(scene:SceneHandler):Void {
         
     }
 }
