@@ -10,6 +10,8 @@ class Bounds implements IComponent {
     public var height:Float;
 
     public var radius:Float;
+    public var radiusX:Float;
+    public var radiusY:Float;
 
     public var originIsCenter:Bool;
 
