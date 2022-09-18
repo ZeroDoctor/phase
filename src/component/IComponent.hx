@@ -1,3 +1,5 @@
 package component;
 
-interface IComponent {}
+interface IComponent { 
+    public function getName():String;
+}

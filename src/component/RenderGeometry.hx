@@ -8,6 +8,9 @@ enum SHAPE {
 
 class RenderGeometry implements IComponent {
     public var shape:SHAPE;
-    public var draw:()->Void;
     public var color:Int;
+
+	public function getName():String {
+        return "RenderGeometry";
+	}
 }

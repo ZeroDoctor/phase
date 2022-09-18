@@ -12,4 +12,8 @@ class Bounds implements IComponent {
     public var radius:Float;
 
     public var originIsCenter:Bool;
+
+    public function getName():String {
+        return "Bounds";
+    }
 }
