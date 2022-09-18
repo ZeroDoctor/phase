@@ -3,7 +3,7 @@ package handler;
 import haxe.ds.Option;
 import component.IComponent;
 
-private class Components<T:IComponent> {
+private class Components<T> {
     private var componentMap:Map<Int, T>;
 
     private var signature:String;
@@ -53,7 +53,7 @@ class ComponentHandler {
         return comp.getComponents();
     }
 
-    public function getComponent<T:IComponent>(id:Int, name:String):Option<T> {
+    public function getComponent<T>(id:Int, name:String):Option<T> {
         if (!this.componentSetMap.exists(name)) {
             return None;
         }
