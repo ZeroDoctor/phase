@@ -3,21 +3,17 @@ package handler;
 import haxe.ds.Option;
 import component.IComponent;
 
-private class Components<T> {
+@:generic
+private class Components<T:IComponent> {
     private var componentMap:Map<Int, T>;
-
     private var signature:String;
 
     public function new():Void {
         this.componentMap = new Map<Int, T>();
     }
 
-    public function get(id:Int):Option<T> {
-        if (this.componentMap.exists(id)) {
-            return Some(this.componentMap.get(id));
-        }
-
-        return None; 
+    public function get(id:Int):T {
+        return this.componentMap.get(id);
     }
 
     public function has(id:Int):Bool {
@@ -26,6 +22,7 @@ private class Components<T> {
 
     public function push(id:Int, component:T):Void {
         this.componentMap.set(id, component);
+        this.signature = component.getName();
     }
 
     public function remove(id:Int):Bool {
@@ -53,21 +50,28 @@ class ComponentHandler {
         return comp.getComponents();
     }
 
-    public function getComponent<T>(id:Int, name:String):Option<T> {
+    public function hasComponent(id:Int, name:String):Bool {
+        if (!this.componentSetMap.exists(name)) {
+            return false;
+        }
+
+        return this.componentSetMap.get(name).has(id);
+    }
+
+    @:generic
+    public function getComponent<T:IComponent>(id:Int, name:String):Option<T> {
         if (!this.componentSetMap.exists(name)) {
             return None;
         }
 
         var comps:Components<IComponent> = this.componentSetMap.get(name);
-        var opt:Option<IComponent> = comps.get(id);
-
-        switch (opt) {
-            case Some(v):
-                var t:T = cast v;
-                return Some(t);
-            case _:
-                return None;
+        var opt:IComponent = comps.get(id);
+        if (opt != null) {
+            var t:T = cast opt;
+            return Some(t);
         }
+
+        return None;
     }
 
     public function assignComponent(id:Int, comp:IComponent):Void {

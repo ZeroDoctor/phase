@@ -53,6 +53,10 @@ class SceneHandler {
         return this.componentHandler.getComponents(name);
     }
 
+    public function hasComponent(id:Int, name:String):Bool {
+        return this.componentHandler.hasComponent(id, name);
+    }
+
     public function getComponent<T:IComponent>(id:Int, name:String):Option<T> {
         return this.componentHandler.getComponent(id, name);
     }

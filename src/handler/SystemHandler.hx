@@ -5,10 +5,12 @@ import system.ISystem;
 class SystemHandler {
 
     private var systemMap:Map<String, ISystem>; // could use array instead
+    private var systemEntityMap:Map<String, Array<Int>>;
     private var sceneHandler:SceneHandler;
 
     public function new(sceneHandler:SceneHandler):Void {
         this.systemMap = new Map<String, ISystem>();
+        this.systemEntityMap = new Map<String, Array<Int>>();
         this.sceneHandler = sceneHandler;
     }
 
@@ -47,10 +49,8 @@ class SystemHandler {
         // this could be better
         for (sign in systemMap.get(name).getSignatures()) {
             for(entity in sceneHandler.entityIterator()) {
-                switch(sceneHandler.getComponent(entity, sign)) {
-                    case Some(_):
-                        entities.push(entity);
-                    case _:
+                if (sceneHandler.hasComponent(entity, sign)) {
+                    entities.push(entity);
                 }
             }
         }
