@@ -23,7 +23,7 @@ class SystemHandler {
         systemMap.remove(name);
     }
 
-    public function update(dt:Float) {
+    public function update(dt:Float):Void {
         var entities:Array<Int> = new Array<Int>();
 
         for(name in systemMap.keys()) {
@@ -33,13 +33,23 @@ class SystemHandler {
         }
     }
 
-    public function render(e:h3d.Engine) {
+    public function render(e:h3d.Engine):Void {
         var entities:Array<Int> = new Array<Int>();
 
         for(name in systemMap.keys()) {
             entities = getEntitiesForSystem(name);
             
             systemMap.get(name).render(e);
+        }
+    }
+
+    public function input(event:hxd.Event):Void {
+        var entities:Array<Int> = new Array<Int>();
+
+        for(name in systemMap.keys()) {
+            entities = getEntitiesForSystem(name);
+            
+            systemMap.get(name).input(event);
         }
     }
 

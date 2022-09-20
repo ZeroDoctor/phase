@@ -1,4 +1,5 @@
 
+import test.BoundsTest;
 import test.EntityTest;
 import state.IState;
 import state.PlayState;
@@ -25,25 +26,29 @@ class Main extends hxd.App {
     sm.init();
   }
   
-  public override function update(dt:Float) {
+  public override function update(dt:Float):Void {
     super.update(dt);
 
     sm.update(dt);
   }
 
-  public override function render(e:h3d.Engine) {
+  public override function render(e:h3d.Engine):Void {
     e.clear(0x3838D8);
     super.render(e);
 
     sm.render(e);
   }
   
-  public function input(event:hxd.Event) {
+  public function input(event:hxd.Event):Void {
     sm.input(event);
   }
 
   public static function main():Void {
+    trace("------ entity ------");
     new EntityTest();
+    trace("------ bounds ------");
+    new BoundsTest();
+    trace("------ main ------");
     new Main();
   }
 }

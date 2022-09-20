@@ -1,18 +1,18 @@
 package component;
 
-enum SHAPE {
-    Circle;
-    Ellipse;
-    Rect;
+enum Shape {
+    CIRCLE;
+    ELLIPSE;
+    RECT;
 }
 
 typedef RenderGeometryDef = { 
-    var shape:SHAPE;
+    var shape:Shape;
     var color:Int;
 }
 
 class RenderGeometry implements IComponent {
-    public var shape:SHAPE;
+    public var shape:Shape;
     public var color:Int;
 
     public function new(def:RenderGeometryDef) {

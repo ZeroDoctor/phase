@@ -19,9 +19,9 @@ class RenderGeometrySystem extends System implements ISystem {
         return "RenderGeometry";
 	}
 
-	public function init() { }
+	public function init():Void { }
 
-	public function update(entities:Array<Int>, dt:Float) {
+	public function update(entities:Array<Int>, dt:Float):Void {
         this.entities = entities;
     }
 
@@ -44,11 +44,11 @@ class RenderGeometrySystem extends System implements ISystem {
             }
 
             switch(geo.shape) {
-                case component.SHAPE.Rect:
+                case RECT:
                     sh.getGraphics().drawRect(bounds.x, bounds.y, bounds.width, bounds.height);
-                case component.SHAPE.Circle:
+                case CIRCLE:
                     sh.getGraphics().drawCircle(bounds.x, bounds.y, bounds.radius, 0);
-                case component.SHAPE.Ellipse:
+                case ELLIPSE:
                     sh.getGraphics().drawEllipse(bounds.x, bounds.y, bounds.radiusX, bounds.radiusY, 0, 0);
             }
 
@@ -57,4 +57,6 @@ class RenderGeometrySystem extends System implements ISystem {
             }
         }
    }
+
+   public function input(event:hxd.Event):Void {}
 }
