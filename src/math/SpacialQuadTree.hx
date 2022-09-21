@@ -25,44 +25,38 @@ private class QuadTreeNode<T> {
 		this.children = new Vector<QuadTreeNode<T>>(4);
 	}
 
+	public function intersects(node:QuadTreeNode<T>):Int {
+		if(getTopLeftBounds().intersects(node.bounds)) {
+			return TOPLEFT;
+		}
+
+		if(getTopRightBounds().intersects(node.bounds)) {
+			return TOPRIGHT;
+		}
+
+		if(getBotLeftBounds().intersects(node.bounds)) {
+			return BOTLEFT;
+		}
+
+		if(getBotRightBounds().intersects(node.bounds)) {
+			return BOTRIGHT;
+		}
+
+		return -1;
+	}
+
 	public function insertChild(child:QuadTreeNode<T>):Int {
-		if (getTopLeftBounds().intersects(child.bounds)) {
-            if(children[TOPLEFT].data != null) {
-                return TOPLEFT;
-            }
-
-			children[TOPLEFT] = child;
-			return -1;
+		var index:Int = this.intersects(child);
+		if (index == -1) {
+			return -2;
 		}
 
-		if (getTopRightBounds().intersects(child.bounds)) {
-            if (children[TOPRIGHT].data != null){
-                return TOPRIGHT;
-            }
-
-			children[TOPRIGHT] = child;
-			return -1;
+		if (children[index].data != null) {
+			return index;
 		}
 
-		if (getBotLeftBounds().intersects(child.bounds)) {
-            if (children[BOTLEFT].data != null ) {
-                return BOTLEFT;
-            }
-
-			children[BOTLEFT] = child;
-			return -1;
-		}
-
-		if (getBotRightBounds().intersects(child.bounds)) {
-            if(children[BOTRIGHT].data != null) {
-                return BOTRIGHT;
-            }
-
-			children[BOTRIGHT] = child;
-			return -1;
-		}
-
-		return -2;
+		children[index] = child;
+		return -1;
 	}
 
 	// ------- HELPER -------
