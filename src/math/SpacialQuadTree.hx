@@ -108,7 +108,11 @@ class SpacialQuadTree<T> implements ISpacialQuadTree<T>{
 		root = new QuadTreeNode(bounds, init);
 	}
 
-	public function search():Void {}
+	public function search():Array<T> {
+		var result:Array<T> = new Array<T>();
+
+		return result;
+	}
 
 	public function insert(bounds:Bounds, data:T):Bool {
 		var node:QuadTreeNode<T> = new QuadTreeNode<T>(bounds, data);
@@ -164,7 +168,9 @@ class SpacialQuadTree<T> implements ISpacialQuadTree<T>{
 		return false;
 	}
 
-	public function remove(bounds:Bounds, data:T):Void {}
+	public function remove(bounds:Bounds, data:T):Bool {
+		return false;
+	}
 
 	public function allocate():Void {}
 

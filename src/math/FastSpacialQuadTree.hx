@@ -85,7 +85,11 @@ class FastSpacialQuadTree<T> implements ISpacialQuadTree<T> {
 		root = new FastQuadTreeNode(bounds);
 	}
 
-	public function search():Void {}
+	public function search():Array<T> {
+		var result:Array<T> = new Array<T>();
+
+		return result;
+	}
 
 	public function insert(bounds:Bounds, data:T):Bool {
 		var node:FastQuadTreeNode<T> = new FastQuadTreeNode<T>(bounds);
@@ -116,9 +120,9 @@ class FastSpacialQuadTree<T> implements ISpacialQuadTree<T> {
 		return false;
 	}
 
-	public function remove(bounds:Bounds, data:T):Void {}
-
-	public function removeArea(bounds:Bounds):Void {}
+	public function remove(bounds:Bounds, data:T):Bool {
+		return false;
+	}
 
 	public function allocate():Void {}
 
