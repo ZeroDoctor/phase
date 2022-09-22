@@ -102,7 +102,7 @@ class SpacialQuadTree<T> implements ISpacialQuadTree<T>{
 	private var depth:Int;
 	private var capacity:Int;
 
-	public function new(depth:Int, capacity:Int, bounds:Bounds, init:T):Void {
+	public function new(bounds:Bounds, init:T, depth:Int, capacity:Int=5):Void {
 		this.depth = depth;
 		this.capacity = capacity;
 		root = new QuadTreeNode(bounds, init);
@@ -124,10 +124,7 @@ class SpacialQuadTree<T> implements ISpacialQuadTree<T>{
 			}
 
 			for(child in temp.children) {
-				if(temp.data == null) {
-					continue;
-				}
-
+				if(temp.data == null) continue;
 				stack.add(child);
 			}
 		}
@@ -145,10 +142,7 @@ class SpacialQuadTree<T> implements ISpacialQuadTree<T>{
 		while (!stack.isEmpty()) {
 			currentDepth--;
 			var temp:QuadTreeNode<T> = stack.pop();
-
-			if(!temp.bounds.intersects(node.bounds)) {
-				continue;
-			}
+			if(!temp.bounds.intersects(node.bounds)) continue;
 
 			if (currentDepth > this.depth) {
 				temp.bucket.push(node);
@@ -199,8 +193,12 @@ class SpacialQuadTree<T> implements ISpacialQuadTree<T>{
 		stack.add(root);
 		while (!stack.isEmpty()) { 
 			var temp:QuadTreeNode<T> = stack.pop();
-			if (!temp.bounds.intersects(bounds)) {
-				continue;
+			if (!temp.bounds.intersects(bounds)) continue;
+
+			for (i in 0...temp.bucket.length) {
+				if (temp.bucket[i].data == data) {
+					return temp.bucket.remove(temp.bucket[i]);
+				}
 			}
 
 			if(temp.data == data) { // found element to remove
@@ -220,14 +218,16 @@ class SpacialQuadTree<T> implements ISpacialQuadTree<T>{
 					otherChildren.push(i);
 				}
 
+				var cloner:util.Cloner = new util.Cloner();
+
 				// node was a leaf
 				if (maxSizeIndex == -1) { 
+					parent.bucket = cloner.clone(temp.children[maxSizeIndex].bucket);
 					return true;
 				}
 
 				// set the larget child as the new node
 				// not the best but its haxe ¯\_(ツ)_/¯
-				var cloner:util.Cloner = new util.Cloner();
 				parent.children[index] = cloner.clone(temp.children[maxSizeIndex]); 
 
 				// insert the other children and their children (less complex way)
@@ -266,8 +266,6 @@ class SpacialQuadTree<T> implements ISpacialQuadTree<T>{
 
 		return false;
 	}
-
-	public function allocate():Void {}
 
 	public function clear():Void {
 		root.children = new Vector<QuadTreeNode<T>>(4);

@@ -7,6 +7,5 @@ interface ISpacialQuadTree<T> {
     public function search(bounds:Bounds):Array<T>;
     public function insert(bounds:Bounds, data:T):Bool;
     public function remove(bounds:Bounds, data:T):Bool;
-    public function allocate():Void;
     public function clear():Void;
 }
