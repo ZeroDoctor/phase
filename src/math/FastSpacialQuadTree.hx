@@ -21,6 +21,7 @@ private class FastQuadTreeNode<T>  {
 	public function new(bounds:Bounds):Void {
 		this.bounds = bounds;
 		this.children = new Vector<FastQuadTreeNode<T>>(4);
+		this.bucket = new Array<FastQuadTreeNode<T>>();
 	}
 
 	public function insertChild(child:FastQuadTreeNode<T>):Int {
@@ -111,7 +112,10 @@ class FastSpacialQuadTree<T> implements ISpacialQuadTree<T> {
 
             var childIndex:Int = temp.insertChild(node);
 
-			if (childIndex == -1) trace("[ERROR | FSQT] should never happen but [error=node failed to subdivide]"); // node failed to subdivide 
+			if (childIndex == -1) {
+				trace("[ERROR | FSQT(insert)] should never happen but [error=node failed to subdivide]"); // node failed to subdivide 
+				return false;
+			}
 
 			stack.add(temp.children[childIndex]);
 		}
@@ -133,5 +137,8 @@ class FastSpacialQuadTree<T> implements ISpacialQuadTree<T> {
 
 	public function allocate():Void {}
 
-	public function clear():Void {}
+	public function clear():Void {
+		root.children = new Vector<FastQuadTreeNode<T>>(4);
+		root.bucket = new Array<FastQuadTreeNode<T>>();
+	}
 }

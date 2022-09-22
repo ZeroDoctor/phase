@@ -22,7 +22,9 @@ private class QuadTreeNode<T> {
 	public function new(bounds:Bounds, data:T):Void {
 		this.bounds = bounds;
 		this.data = data;
+
 		this.children = new Vector<QuadTreeNode<T>>(4);
+		this.bucket = new Array<QuadTreeNode<T>>();
 	}
 
 	public function intersects(node:QuadTreeNode<T>):Int {
@@ -82,6 +84,10 @@ private class QuadTreeNode<T> {
 		return Bounds.fromValues(
             bounds.x + (bounds.width / 2), bounds.y + (bounds.height / 2), bounds.width / 2, bounds.height / 2
         );
+	}
+
+	public function clone():QuadTreeNode<T> {
+		return new QuadTreeNode<T>(bounds.clone(), this.data);
 	}
 }
 
@@ -150,7 +156,7 @@ class SpacialQuadTree<T> implements ISpacialQuadTree<T>{
 			}
 
 			// check if new node is bigger than current node (other than root node)
-			if (!stack.isEmpty()) {
+			if (currentDepth > 0) {
 				var s1:Point = temp.bounds.getSize(); 
 				var s2:Point = node.bounds.getSize(); 
 				if(s1.x*s1.y < s2.x*s2.y) {
@@ -160,6 +166,7 @@ class SpacialQuadTree<T> implements ISpacialQuadTree<T>{
 					// swap current node with new node 
 					temp = node;
 					node = new QuadTreeNode<T>(tempBounds, tempData);
+					stack.add(node);
 
 					// treat previous current node as new node
 					continue;
@@ -184,11 +191,77 @@ class SpacialQuadTree<T> implements ISpacialQuadTree<T>{
 	}
 
 	public function remove(bounds:Bounds, data:T):Bool {
-		var stack:GenericStack<QuadTreeNode<T>> = new GenericStack<QuadTreeNode<T>>();
+		if(data == null) return true;
 
+		var stack:GenericStack<QuadTreeNode<T>> = new GenericStack<QuadTreeNode<T>>();
+		var parentStack:GenericStack<QuadTreeNode<T>> = new GenericStack<QuadTreeNode<T>>();
+
+		stack.add(root);
 		while (!stack.isEmpty()) { 
 			var temp:QuadTreeNode<T> = stack.pop();
+			if (!temp.bounds.intersects(bounds)) {
+				continue;
+			}
 
+			if(temp.data == data) { // found element to remove
+				var parent:QuadTreeNode<T> = parentStack.pop();
+				var index:Int = parent.intersects(temp);
+
+				var otherChildren:Array<Int> = new Array<Int>();
+				var maxSize:Point = new Point();
+				var maxSizeIndex:Int = -1;
+				for(i in 0...temp.children.length) {
+					var size:Point = temp.children[i].bounds.getSize();
+					if (size.length() > maxSize.length()) {
+						maxSize = size;
+						maxSizeIndex = i;
+						continue;
+					}
+					otherChildren.push(i);
+				}
+
+				// node was a leaf
+				if (maxSizeIndex == -1) { 
+					return true;
+				}
+
+				// set the larget child as the new node
+				// not the best but its haxe ¯\_(ツ)_/¯
+				var cloner:util.Cloner = new util.Cloner();
+				parent.children[index] = cloner.clone(temp.children[maxSizeIndex]); 
+
+				// insert the other children and their children (less complex way)
+				var stack:GenericStack<QuadTreeNode<T>> = new GenericStack<QuadTreeNode<T>>();
+
+				for(childIndex in otherChildren) {
+					stack.add(temp.children[childIndex]);
+
+					while(!stack.isEmpty()) {
+						var child:QuadTreeNode<T> = stack.pop();
+
+						var ok:Bool = this.insert(child.bounds, child.data);
+						if (!ok) {
+							trace('[ERROR | SQT(remove)] failed to insert child [data=${child.data}] [bounds=${child.bounds}]');
+						}
+
+						for(c in child.children) {
+							if (c.data == null) continue;
+							stack.add(c);
+						}
+					}
+				}
+
+				return true;
+			}
+
+			parentStack.add(temp);
+			for (child in temp.children) {
+				if (temp.data == null) {
+					continue;
+				}
+
+				stack.add(child);
+			}
 		}
 
 		return false;
@@ -196,5 +269,8 @@ class SpacialQuadTree<T> implements ISpacialQuadTree<T>{
 
 	public function allocate():Void {}
 
-	public function clear():Void {}
+	public function clear():Void {
+		root.children = new Vector<QuadTreeNode<T>>(4);
+		root.bucket = new Array<QuadTreeNode<T>>();
+	}
 }
