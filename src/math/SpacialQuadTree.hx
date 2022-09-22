@@ -102,8 +102,29 @@ class SpacialQuadTree<T> implements ISpacialQuadTree<T>{
 		root = new QuadTreeNode(bounds, init);
 	}
 
-	public function search():Array<T> {
+	public function search(node:Bounds):Array<T> {
 		var result:Array<T> = new Array<T>();
+
+		var stack:GenericStack<QuadTreeNode<T>> = new GenericStack<QuadTreeNode<T>>();
+		stack.add(root);
+
+		while(!stack.isEmpty()) {
+			var temp:QuadTreeNode<T> = stack.pop();
+			if(temp.data != null && temp.bounds.intersects(node)) {
+				result.push(temp.data);
+				for(b in temp.bucket) {
+					result.push(b.data);
+				}
+			}
+
+			for(child in temp.children) {
+				if(temp.data == null) {
+					continue;
+				}
+
+				stack.add(child);
+			}
+		}
 
 		return result;
 	}
@@ -163,6 +184,13 @@ class SpacialQuadTree<T> implements ISpacialQuadTree<T>{
 	}
 
 	public function remove(bounds:Bounds, data:T):Bool {
+		var stack:GenericStack<QuadTreeNode<T>> = new GenericStack<QuadTreeNode<T>>();
+
+		while (!stack.isEmpty()) { 
+			var temp:QuadTreeNode<T> = stack.pop();
+
+		}
+
 		return false;
 	}
 
