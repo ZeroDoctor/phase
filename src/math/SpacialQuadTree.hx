@@ -11,7 +11,7 @@ final BOTLEFT:Int = 2;
 final BOTRIGHT:Int = 3;
 
 @:generic
-private class QuadTreeNode<T> {
+class QuadTreeNode<T> {
 	public var data:T;
 	public var bounds:Bounds;
 	public var children:Vector<QuadTreeNode<T>>;
@@ -108,10 +108,12 @@ class SpacialQuadTree<T> implements ISpacialQuadTree<T>{
 	private var root:QuadTreeNode<T>;
 	private var depth:Int;
 	private var capacity:Int;
+	private var init:T;
 
 	public function new(bounds:Bounds, init:T, depth:Int, capacity:Int=5):Void {
 		this.depth = depth;
 		this.capacity = capacity;
+		this.init = init;
 		root = new QuadTreeNode(bounds, init);
 	}
 
@@ -131,11 +133,16 @@ class SpacialQuadTree<T> implements ISpacialQuadTree<T>{
 			}
 
 			for(child in temp.children) {
-				if(temp.data == null) continue;
+				if(child == null || child.data == null) continue;
 				stack.add(child);
+
+				for(b in temp.bucket) {
+					stack.add(b);
+				}
 			}
 		}
 
+		result.remove(init);
 		return result;
 	}
 
@@ -261,11 +268,12 @@ class SpacialQuadTree<T> implements ISpacialQuadTree<T>{
 
 			parentStack.add(temp);
 			for (child in temp.children) {
-				if (temp.data == null) {
-					continue;
-				}
+				if (temp.data == null) continue;
 
 				stack.add(child);
+				for(b in temp.bucket) {
+					stack.add(b);
+				}
 			}
 		}
 

@@ -1,5 +1,6 @@
 package test;
 
+import haxe.ds.GenericStack;
 import math.FastSpacialQuadTree;
 import math.ISpacialQuadTree;
 import h2d.col.Bounds;
@@ -23,7 +24,7 @@ class TreeTest {
             Bounds.fromValues(24, 24, 5, 5),
             Bounds.fromValues(45, 45, 5, 5),
             Bounds.fromValues(45, 74, 5, 5),
-            Bounds.fromValues(74, 45, 5, 5),
+            Bounds.fromValues(74, 67, 5, 5),
             Bounds.fromValues(74, 74, 5, 5),
         ]);
 
@@ -33,14 +34,48 @@ class TreeTest {
     }
 
     public function Normal():Void {
+        trace("--------------");
+
         var tree:SpacialQuadTree<Int> = new SpacialQuadTree<Int>(space, -1, 16, 5);
         this.populate(tree);
-        trace(tree);
+
+        var stack:GenericStack<QuadTreeNode<Int>> = new GenericStack<QuadTreeNode<Int>>();
+        stack.add(tree.getRoot());
+
+        while(!stack.isEmpty()) {
+            var temp:QuadTreeNode<Int> = stack.pop();
+            if(temp.data == null) continue;
+
+            trace(temp);
+
+            for(i in 0...temp.children.length) {
+                if(temp.children[i] == null) continue;
+                stack.add(temp.children[i]);
+            }
+        }
+
+        trace(tree.search(Bounds.fromValues(34, 34, 7, 7)));
     }
 
     public function Fast():Void {
-        var tree:FastSpacialQuadTree<Int> = new FastSpacialQuadTree<Int>(space, -1, 16, 5);
+        trace("--------------");
+
+        var tree:FastSpacialQuadTree<Int> = new FastSpacialQuadTree<Int>(space, -1, 16, 4);
         this.populate(tree);
-        trace(tree);
+
+        var stack:GenericStack<FastQuadTreeNode<Int>> = new GenericStack<FastQuadTreeNode<Int>>();
+        stack.add(tree.getRoot());
+
+        while(!stack.isEmpty()) {
+            var temp:FastQuadTreeNode<Int> = stack.pop();
+            if(temp.bucket.length <= 0 ) continue;
+
+            trace(temp);
+
+            for(i in 0...temp.children.length) {
+                if(temp.children[i] == null) continue;
+                stack.add(temp.children[i]);
+            }
+        }
     }
 }

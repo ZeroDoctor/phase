@@ -1,0 +1,5 @@
+package init;
+
+class Init {
+
+}
