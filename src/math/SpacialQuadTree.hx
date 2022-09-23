@@ -53,11 +53,18 @@ private class QuadTreeNode<T> {
 			return -2;
 		}
 
-		if (children[index].data != null) {
+		if (children[index] != null && children[index].data != null) {
 			return index;
 		}
 
-		children[index] = child;
+		// potential issue: should set the bounds from help functions instead
+		children[index] = child; 
+		switch(index) {
+			case TOPLEFT: children[index].bounds = getTopLeftBounds(); 
+			case TOPRIGHT: children[index].bounds = getTopRightBounds();
+			case BOTLEFT: children[index].bounds = getBotLeftBounds();
+			case BOTRIGHT: children[index].bounds = getBotRightBounds();
+		}
 		return -1;
 	}
 
@@ -140,7 +147,6 @@ class SpacialQuadTree<T> implements ISpacialQuadTree<T>{
 		stack.add(root);
 
 		while (!stack.isEmpty()) {
-			currentDepth--;
 			var temp:QuadTreeNode<T> = stack.pop();
 			if(!temp.bounds.intersects(node.bounds)) continue;
 
@@ -160,7 +166,6 @@ class SpacialQuadTree<T> implements ISpacialQuadTree<T>{
 					// swap current node with new node 
 					temp = node;
 					node = new QuadTreeNode<T>(tempBounds, tempData);
-					stack.add(node);
 
 					// treat previous current node as new node
 					continue;
@@ -171,7 +176,7 @@ class SpacialQuadTree<T> implements ISpacialQuadTree<T>{
 
             // edge cases
 			if (childIndex == -1) return true; // node was successfully inserted as child
-            if (childIndex == -2) {            // node is at max depth
+            if (childIndex == -2) {            // node failed to insert. shouldn't happen
                 temp.bucket.push(node);
                 return true;
             }
@@ -271,4 +276,6 @@ class SpacialQuadTree<T> implements ISpacialQuadTree<T>{
 		root.children = new Vector<QuadTreeNode<T>>(4);
 		root.bucket = new Array<QuadTreeNode<T>>();
 	}
+
+	public function getRoot():QuadTreeNode<T> { return root; }
 }
