@@ -1,4 +1,5 @@
 
+import test.QuadTreeTest.TreeTest;
 import test.BoundsTest;
 import test.EntityTest;
 import state.IState;
@@ -48,6 +49,10 @@ class Main extends hxd.App {
     new EntityTest();
     trace("------ bounds ------");
     new BoundsTest();
+    trace("------ tree ------");
+    var treeTest:TreeTest = new TreeTest();
+    treeTest.Normal();
+    treeTest.Fast();
     trace("------ main ------");
     new Main();
   }

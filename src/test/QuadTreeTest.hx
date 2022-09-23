@@ -16,7 +16,7 @@ class TreeTest {
     private function populate(tree:ISpacialQuadTree<Int>):Void {
         var bounds:Array<Bounds> = new Array<Bounds>();
 
-        bounds.concat([
+        bounds = bounds.concat([
             Bounds.fromValues(12, 12, 5, 5),
             Bounds.fromValues(12, 24, 5, 5),
             Bounds.fromValues(24, 12, 5, 5),
@@ -33,12 +33,14 @@ class TreeTest {
     }
 
     public function Normal():Void {
-        var tree:ISpacialQuadTree<Int> = new SpacialQuadTree<Int>(space, -1, 16, 5);
-        populate(tree);
+        var tree:SpacialQuadTree<Int> = new SpacialQuadTree<Int>(space, -1, 16, 5);
+        this.populate(tree);
+        trace(tree);
     }
 
     public function Fast():Void {
-        var tree:ISpacialQuadTree<Int> = new FastSpacialQuadTree<Int>(space, -1, 16, 5);
-        populate(tree);
+        var tree:FastSpacialQuadTree<Int> = new FastSpacialQuadTree<Int>(space, -1, 16, 5);
+        this.populate(tree);
+        trace(tree);
     }
 }
