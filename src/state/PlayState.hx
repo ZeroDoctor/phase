@@ -1,5 +1,6 @@
 package state;
 
+import init.Init;
 import component.RenderGeometry;
 import component.Bounds;
 import system.RenderGeometrySystem;
@@ -62,39 +63,13 @@ class PlayState implements IState {
 }
 
 function initScene(sceneHandler:SceneHandler):Void {
-    var entity:Int = sceneHandler.createEntity();
-    sceneHandler.assignComponent(entity, new Bounds({
-      x: 10.0, y: 50.0, z: 0.0,
-      width: 25.0, height: 25.0, length: 0.0,
-      radius: 0.0, radiusX: 0.0, radiusY: 0.0,
-      originIsCenter: false
-    }));
+  var init:Init = new Init(sceneHandler);
 
-    sceneHandler.assignComponent(entity, new RenderGeometry({
-      shape: Shape.RECT, color: 0xDA0D0D
-    }));
+  init.newEntity(25, 30, 0x0A8A0A);
+  init.newEntity(45, 20, 0xF48F4A);
+  init.newEntity(20, 45, 0x8D08FF);
 
-    entity = sceneHandler.createEntity();
-    sceneHandler.assignComponent(entity, new Bounds({
-      x: 45.0, y: 50.0, z: 0.0,
-      width: 25.0, height: 25.0, length: 0.0,
-      radius: 0.0, radiusX: 0.0, radiusY: 0.0,
-      originIsCenter: false
-    }));
-
-    sceneHandler.assignComponent(entity, new RenderGeometry({
-      shape: Shape.RECT, color: 0x0DDA0D
-    }));
-
-    entity = sceneHandler.createEntity();
-    sceneHandler.assignComponent(entity, new Bounds({
-      x: 45.0, y: 100.0, z: 0.0,
-      width: 0.0, height: 0.0, length: 0.0,
-      radius: 10.0, radiusX: 0.0, radiusY: 0.0,
-      originIsCenter: false
-    }));
-
-    sceneHandler.assignComponent(entity, new RenderGeometry({
-      shape: Shape.CIRCLE, color: 0xAD008D
-    }));
+  init.newEntity(50, 30, 0x0A8A0A);
+  init.newEntity(55, 20, 0xF48F4A);
+  init.newEntity(60, 45, 0x8D08FF);
 }
