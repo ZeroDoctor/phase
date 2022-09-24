@@ -7,6 +7,7 @@ import handler.SceneHandler;
 
 class RenderGeometrySystem extends System implements ISystem {
     private var entities:Array<Int>;
+
     public function new(sh:SceneHandler):Void {
         super(sh);
     }
