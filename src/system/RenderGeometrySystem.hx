@@ -27,14 +27,14 @@ class RenderGeometrySystem extends System implements ISystem {
     }
 
    public function render(e:h3d.Engine):Void {
-        for (e in entities) {
-            var optBounds:Option<Bounds> = sh.getComponent(e, "Bounds");
+        for (entity in entities) {
+            var optBounds:Option<Bounds> = sh.getComponent(entity, "Bounds");
             var bounds:Bounds = switch(optBounds) {
                 case Some(v): v;
                 case _: continue;
             }
 
-            var optGeo:Option<RenderGeometry> = sh.getComponent(e, "RenderGeometry");
+            var optGeo:Option<RenderGeometry> = sh.getComponent(entity, "RenderGeometry");
             var geo:RenderGeometry = switch(optGeo) {
                 case Some(v): v;
                 case _: continue;

@@ -1,5 +1,6 @@
 package state;
 
+import system.VelocitySystem;
 import init.Init;
 import component.RenderGeometry;
 import component.Bounds;
@@ -30,11 +31,14 @@ class PlayState implements IState {
     var font:h2d.Font = DefaultFont.get();
 
     fpsText = new h2d.Text(font);
+    fpsText.x = 10;
+    fpsText.y = 10;
     fpsText.textAlign = Left;
 
     drawCallText = new h2d.Text(font);
     drawCallText.textAlign = Left;
-    drawCallText.y = fpsText.textHeight + 5;
+    drawCallText.x = 10;
+    drawCallText.y = fpsText.textHeight + 15;
 
     this.scene.addChild(fpsText);
     this.scene.addChild(drawCallText);
@@ -43,6 +47,7 @@ class PlayState implements IState {
     this.systemHandler = new SystemHandler(sceneHandler);
 
     systemHandler.register(new RenderGeometrySystem(sceneHandler));
+    systemHandler.register(new VelocitySystem(sceneHandler));
 
     initScene(sceneHandler);
   }
@@ -65,11 +70,9 @@ class PlayState implements IState {
 function initScene(sceneHandler:SceneHandler):Void {
   var init:Init = new Init(sceneHandler);
 
-  init.newEntity(25, 30, 0x0A8A0A);
-  init.newEntity(45, 20, 0xF48F4A);
-  init.newEntity(20, 45, 0x8D08FF);
+  var entityCount:Int = 50;
 
-  init.newEntity(50, 30, 0x0A8A0A);
-  init.newEntity(55, 20, 0xF48F4A);
-  init.newEntity(60, 45, 0x8D08FF);
+  for (i in 0...entityCount) {
+    init.newEntity(Std.random(1000), Std.random(1000), Std.random(0xFFFFFF));
+  }
 }

@@ -1,6 +1,7 @@
 package init;
 
-import component.RandomVelocity;
+import h3d.Vector;
+import component.Velocity;
 import component.RidgidBody;
 import component.Collider;
 import component.RenderGeometry;
@@ -37,13 +38,13 @@ class Init {
 
         var body:RidgidBody = new RidgidBody({ });
 
-        var randomVelocity:RandomVelocity = new RandomVelocity({ });
+        var velocity:Velocity = new Velocity({ magnitude: 5.0, direction: Math.PI * Math.random() });
 
         this.sceneHandler.assignComponent(entity, bounds);
         this.sceneHandler.assignComponent(entity, geometry);
         this.sceneHandler.assignComponent(entity, collider);
         this.sceneHandler.assignComponent(entity, body);
-        this.sceneHandler.assignComponent(entity, randomVelocity);
+        this.sceneHandler.assignComponent(entity, velocity);
 
         return entity;
     }

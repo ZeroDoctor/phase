@@ -34,7 +34,6 @@ class Main extends hxd.App {
   }
 
   public override function render(e:h3d.Engine):Void {
-    e.clear(0x3838D8);
     super.render(e);
 
     sm.render(e);
