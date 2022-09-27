@@ -4,13 +4,12 @@ import math.SpacialQuadTree.TOPLEFT;
 import math.SpacialQuadTree.TOPRIGHT;
 import math.SpacialQuadTree.BOTLEFT;
 import math.SpacialQuadTree.BOTRIGHT;
-
 import haxe.ds.GenericStack;
 import h2d.col.Bounds;
 import haxe.ds.Vector;
 
 @:generic
-class FastQuadTreeNode<T>  {
+class FastQuadTreeNode<T> {
 	public var bounds:Bounds;
 	public var children:Vector<FastQuadTreeNode<T>>;
 
@@ -23,37 +22,37 @@ class FastQuadTreeNode<T>  {
 		this.bucket = new Array<T>();
 	}
 
-	public function insertChild(child:FastQuadTreeNode<T>):Int {
-		if (getTopLeftBounds().intersects(child.bounds)) {
+	public function insertChild(bounds:Bounds):Int {
+		if (getTopLeftBounds().intersects(bounds)) {
 			if (this.children[TOPLEFT] == null) {
 				this.children[TOPLEFT] = new FastQuadTreeNode<T>(getTopLeftBounds());
 			}
 
-            return TOPLEFT;
+			return TOPLEFT;
 		}
 
-		if (getTopRightBounds().intersects(child.bounds)) {
+		if (getTopRightBounds().intersects(bounds)) {
 			if (this.children[TOPRIGHT] == null) {
 				this.children[TOPRIGHT] = new FastQuadTreeNode<T>(getTopRightBounds());
 			}
 
-            return TOPRIGHT;
+			return TOPRIGHT;
 		}
 
-		if (getBotLeftBounds().intersects(child.bounds)) {
-			if (this.children[BOTLEFT] == null)  {
+		if (getBotLeftBounds().intersects(bounds)) {
+			if (this.children[BOTLEFT] == null) {
 				this.children[BOTLEFT] = new FastQuadTreeNode<T>(getBotLeftBounds());
 			}
 
-            return BOTLEFT;
+			return BOTLEFT;
 		}
 
-		if (getBotRightBounds().intersects(child.bounds)) {
+		if (getBotRightBounds().intersects(bounds)) {
 			if (this.children[BOTRIGHT] == null) {
 				this.children[BOTRIGHT] = new FastQuadTreeNode<T>(getBotRightBounds());
 			}
 
-            return BOTRIGHT;
+			return BOTRIGHT;
 		}
 
 		return -1;
@@ -61,33 +60,25 @@ class FastQuadTreeNode<T>  {
 
 	// ------- HELPER -------
 	public function getTopLeftBounds():Bounds {
-		return Bounds.fromValues(
-            bounds.x, bounds.y, bounds.width / 2, bounds.height / 2
-        );
+		return Bounds.fromValues(bounds.x, bounds.y, bounds.width / 2, bounds.height / 2);
 	}
 
 	public function getTopRightBounds():Bounds {
-		return Bounds.fromValues(
-            bounds.x + (bounds.width / 2), bounds.y, bounds.width / 2, bounds.height / 2
-        );
+		return Bounds.fromValues(bounds.x + (bounds.width / 2), bounds.y, bounds.width / 2, bounds.height / 2);
 	}
 
 	public function getBotLeftBounds():Bounds {
-		return Bounds.fromValues(
-            bounds.x, bounds.y + (bounds.height / 2), bounds.width / 2, bounds.height / 2
-        );
+		return Bounds.fromValues(bounds.x, bounds.y + (bounds.height / 2), bounds.width / 2, bounds.height / 2);
 	}
 
 	public function getBotRightBounds():Bounds {
-		return Bounds.fromValues(
-            bounds.x + (bounds.width / 2), bounds.y + (bounds.height / 2), bounds.width / 2, bounds.height / 2
-        );
+		return Bounds.fromValues(bounds.x + (bounds.width / 2), bounds.y + (bounds.height / 2), bounds.width / 2, bounds.height / 2);
 	}
 }
 
 @:generic
 class FastSpacialQuadTree<T> implements ISpacialQuadTree<T> {
-    private var root:FastQuadTreeNode<T>;
+	private var root:FastQuadTreeNode<T>;
 	private var depth:Int;
 	private var capacity:Int;
 
@@ -105,12 +96,14 @@ class FastSpacialQuadTree<T> implements ISpacialQuadTree<T> {
 
 		while (!stack.isEmpty()) {
 			var temp:FastQuadTreeNode<T> = stack.pop();
-			if(!temp.bounds.intersects(bounds)) continue;
+			if (!temp.bounds.intersects(bounds))
+				continue;
 
 			result = result.concat(temp.bucket);
 
-			for(i in 0...temp.children.length) {
-				if(temp.children[i] == null) continue;
+			for (i in 0...temp.children.length) {
+				if (temp.children[i] == null)
+					continue;
 
 				stack.add(temp.children[i]);
 			}
@@ -120,23 +113,22 @@ class FastSpacialQuadTree<T> implements ISpacialQuadTree<T> {
 	}
 
 	public function insert(bounds:Bounds, data:T):Bool {
-		var node:FastQuadTreeNode<T> = new FastQuadTreeNode<T>(bounds);
-
 		var stack:GenericStack<FastQuadTreeNode<T>> = new GenericStack<FastQuadTreeNode<T>>();
 		stack.add(root);
 
 		while (!stack.isEmpty()) {
 			var temp:FastQuadTreeNode<T> = stack.pop();
-			if(!temp.bounds.intersects(node.bounds)) continue;
+			if (!temp.bounds.intersects(bounds))
+				continue;
 
-            if (temp.bucket.length < this.capacity) {
-                temp.bucket.push(data);
-                return true;
-            }
+			if (temp.bucket.length < this.capacity) {
+				temp.bucket.push(data);
+				return true;
+			}
 
-            var childIndex:Int = temp.insertChild(node);
+			var childIndex:Int = temp.insertChild(bounds);
 			if (childIndex == -1) {
-				trace("[ERROR | FSQT(insert)] should never happen but [error=node failed to subdivide]"); // node failed to subdivide 
+				trace("[ERROR | FSQT(insert)] should never happen but [error=node failed to subdivide]"); // node failed to subdivide
 				return false;
 			}
 
@@ -150,18 +142,21 @@ class FastSpacialQuadTree<T> implements ISpacialQuadTree<T> {
 	public function remove(bounds:Bounds, data:T):Bool {
 		var stack:GenericStack<FastQuadTreeNode<T>> = new GenericStack<FastQuadTreeNode<T>>();
 		stack.add(root);
-		
-		while (!stack.isEmpty()) { 
-			var temp:FastQuadTreeNode<T> = stack.pop();
-			if(temp.bucket.length <= 0) continue;
-			if(!temp.bounds.intersects(bounds)) continue;
 
-			if(temp.bucket.contains(data)) {
+		while (!stack.isEmpty()) {
+			var temp:FastQuadTreeNode<T> = stack.pop();
+			if (temp.bucket.length <= 0)
+				continue;
+			if (!temp.bounds.intersects(bounds))
+				continue;
+
+			if (temp.bucket.contains(data)) {
 				return temp.bucket.remove(data);
 			}
 
-			for(i in 0...temp.children.length) {
-				if(temp.children[i] == null) continue;
+			for (i in 0...temp.children.length) {
+				if (temp.children[i] == null)
+					continue;
 
 				stack.add(temp.children[i]);
 			}
@@ -175,5 +170,7 @@ class FastSpacialQuadTree<T> implements ISpacialQuadTree<T> {
 		root.bucket = new Array<T>();
 	}
 
-	public function getRoot():FastQuadTreeNode<T> { return root; }
+	public function getRoot():FastQuadTreeNode<T> {
+		return root;
+	}
 }
