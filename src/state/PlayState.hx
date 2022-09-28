@@ -1,10 +1,9 @@
 package state;
 
+import system.ColliderSystem;
 import system.VelocitySystem;
-import init.Init;
-import component.RenderGeometry;
-import component.Bounds;
 import system.RenderGeometrySystem;
+import init.Init;
 import handler.SystemHandler;
 import handler.SceneHandler;
 import hxd.res.DefaultFont;
@@ -46,8 +45,18 @@ class PlayState implements IState {
     this.sceneHandler = new SceneHandler(scene, g);
     this.systemHandler = new SystemHandler(sceneHandler);
 
-    systemHandler.register(new RenderGeometrySystem(sceneHandler));
-    systemHandler.register(new VelocitySystem(sceneHandler));
+    var colliderSystem:ColliderSystem = new ColliderSystem(sceneHandler);
+    var velocitySystem:VelocitySystem = new VelocitySystem(sceneHandler);
+    var renderGeometrySystem:RenderGeometrySystem = new RenderGeometrySystem(sceneHandler);
+
+    colliderSystem.addResolutionFunction(function(collider, otherCollider):Void {
+      collider.velocity.direction = -collider.velocity.direction;
+      otherCollider.velocity.direction = -otherCollider.velocity.direction;
+    });
+
+    systemHandler.register(colliderSystem);
+    systemHandler.register(velocitySystem);
+		systemHandler.register(renderGeometrySystem);
 
     initScene(sceneHandler);
   }
@@ -70,9 +79,8 @@ class PlayState implements IState {
 function initScene(sceneHandler:SceneHandler):Void {
   var init:Init = new Init(sceneHandler);
 
-  var entityCount:Int = 50;
-
+  var entityCount:Int = 500;
   for (i in 0...entityCount) {
-    init.newEntity(Std.random(1000), Std.random(1000), Std.random(0xFFFFFF));
+    init.newEntity(Std.random(500)+250, Std.random(500)+250, Std.random(0xFFFFFF));
   }
 }

@@ -1,6 +1,7 @@
 package component;
 
 enum ColliderType {
+	NONE;
 	SOLID;
 	HOLE;
 }
