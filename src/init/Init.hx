@@ -16,7 +16,7 @@ class Init {
 		this.sceneHandler = sceneHandler;
 	}
 
-	public function newEntity(x:Float, y:Float, color:Int):Int {
+	public function newEntity(x:Float, y:Float, color:Int, magnitude:Float, direction:Float):Int {
 		var entity:Int = this.sceneHandler.createEntity();
 
 		var bounds:IComponent = new Bounds({
@@ -38,7 +38,7 @@ class Init {
 
 		var body:RidgidBody = new RidgidBody({});
 
-		var velocity:Velocity = new Velocity({magnitude: 5.0, direction: Math.PI * Math.random()});
+		var velocity:Velocity = new Velocity({magnitude: magnitude, direction: direction});
 
 		this.sceneHandler.assignComponent(entity, bounds);
 		this.sceneHandler.assignComponent(entity, geometry);

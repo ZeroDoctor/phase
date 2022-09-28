@@ -9,78 +9,84 @@ import handler.SceneHandler;
 import hxd.res.DefaultFont;
 
 class PlayState implements IState {
-  private var scene:h2d.Scene;
-  private var g:h2d.Graphics;
+    private var scene:h2d.Scene;
+    private var g:h2d.Graphics;
 
-  private var fpsText:h2d.Text;
-  private var drawCallText:h2d.Text;
-  
-  private var sceneHandler:SceneHandler;
-  private var systemHandler:SystemHandler;
+    private var fpsText:h2d.Text;
+    private var drawCallText:h2d.Text;
 
-  public function new(scene:h2d.Scene) {
-    this.scene = scene;
+    private var sceneHandler:SceneHandler;
+    private var systemHandler:SystemHandler;
 
-    g = new h2d.Graphics(this.scene);
-  }
+    public function new(scene:h2d.Scene) {
+        this.scene = scene;
+        this.g = new h2d.Graphics(this.scene);
+    }
 
-  public function init(sm:StateManager):Void {
-    trace("init playstate...");
-    
-    var font:h2d.Font = DefaultFont.get();
+    public function init(sm:StateManager):Void {
+        trace("init playstate...");
 
-    fpsText = new h2d.Text(font);
-    fpsText.x = 10;
-    fpsText.y = 10;
-    fpsText.textAlign = Left;
+        var font:h2d.Font = DefaultFont.get();
 
-    drawCallText = new h2d.Text(font);
-    drawCallText.textAlign = Left;
-    drawCallText.x = 10;
-    drawCallText.y = fpsText.textHeight + 15;
+        fpsText = new h2d.Text(font);
+        fpsText.x = 10;
+        fpsText.y = 10;
+        fpsText.textAlign = Left;
 
-    this.scene.addChild(fpsText);
-    this.scene.addChild(drawCallText);
+        drawCallText = new h2d.Text(font);
+        drawCallText.textAlign = Left;
+        drawCallText.x = 10;
+        drawCallText.y = fpsText.textHeight + 15;
 
-    this.sceneHandler = new SceneHandler(scene, g);
-    this.systemHandler = new SystemHandler(sceneHandler);
+        this.scene.addChild(fpsText);
+        this.scene.addChild(drawCallText);
 
-    var colliderSystem:ColliderSystem = new ColliderSystem(sceneHandler);
-    var velocitySystem:VelocitySystem = new VelocitySystem(sceneHandler);
-    var renderGeometrySystem:RenderGeometrySystem = new RenderGeometrySystem(sceneHandler);
+        this.sceneHandler = new SceneHandler(scene, g);
+        this.systemHandler = new SystemHandler(sceneHandler);
 
-    colliderSystem.addResolutionFunction(function(collider, otherCollider):Void {
-      collider.velocity.direction = -collider.velocity.direction;
-      otherCollider.velocity.direction = -otherCollider.velocity.direction;
-    });
+        var colliderSystem:ColliderSystem = new ColliderSystem(sceneHandler);
+        systemHandler.register(colliderSystem);
+        
+        var velocitySystem:VelocitySystem = new VelocitySystem(sceneHandler);
+        systemHandler.register(velocitySystem);
+        
+        var renderGeometrySystem:RenderGeometrySystem = new RenderGeometrySystem(sceneHandler);
+        systemHandler.register(renderGeometrySystem);
 
-    systemHandler.register(colliderSystem);
-    systemHandler.register(velocitySystem);
-		systemHandler.register(renderGeometrySystem);
+        colliderSystem.addResolutionFunction(function(collider, otherCollider):Void {
+            collider.velocity.direction = collider.velocity.direction + Math.PI;
+            otherCollider.velocity.direction = otherCollider.velocity.direction + Math.PI;
+        });
 
-    initScene(sceneHandler);
-  }
-  
-  public function update(dt:Float):Void {
-    systemHandler.update(dt);
-  }
+        initScene(sceneHandler);
+    }
 
-  public function render(e:h3d.Engine):Void {
-    fpsText.text = "fps: "+Std.string(e.fps);
-    drawCallText.text = "draw calls: "+Std.string(e.drawCalls);
-    systemHandler.render(e);
-  }
+    public function update(dt:Float):Void {
+        systemHandler.update(dt);
+    }
 
-  public function input(event:hxd.Event):Void {
-    systemHandler.input(event);
-  }
+    public function render(e:h3d.Engine):Void {
+        fpsText.text = "fps: "+Std.string(e.fps);
+        drawCallText.text = "draw calls: "+Std.string(e.drawCalls);
+        systemHandler.render(e);
+    }
+
+    public function input(event:hxd.Event):Void {
+        systemHandler.input(event);
+    }
 }
 
 function initScene(sceneHandler:SceneHandler):Void {
-  var init:Init = new Init(sceneHandler);
+    var init:Init = new Init(sceneHandler);
 
-  var entityCount:Int = 500;
-  for (i in 0...entityCount) {
-    init.newEntity(Std.random(500)+250, Std.random(500)+250, Std.random(0xFFFFFF));
-  }
+    // init.newEntity(200, 200, Std.random(0xFFFFFF), 5.0, 0.0);
+    // init.newEntity(250, 200, Std.random(0xFFFFFF), 5.0, Math.PI);
+
+    var entityCount:Int = 300;
+    for (i in 0...entityCount) {
+        init.newEntity(
+            Std.random(500)+(i*15.0), Std.random(500)+(i*15.0), Std.random(0xFFFFFF),
+            15.0, Math.random()
+        );
+    }
 }
