@@ -35,7 +35,6 @@ class SystemHandler {
 	}
 
 	public function render(e:h3d.Engine):Void {
-		sceneHandler.getGraphics().clear();
 		for (system in systems) {
 			system.render(e);
 		}
@@ -61,12 +60,17 @@ class SystemHandler {
 		if (system == null)
 			return entities;
 
-		// this could be better
-		for (sign in system.getSignatures()) {
-			for (entity in sceneHandler.entityIterator()) {
-				if (sceneHandler.hasComponent(entity, sign)) {
-					entities.push(entity);
+		for (entity in sceneHandler.entityIterator()) {
+			var shouldPush:Bool = true;
+			for (sign in system.getSignatures()) {
+				if (!sceneHandler.hasComponent(entity, sign)) {
+					shouldPush = false;
+					break;
 				}
+			}
+
+			if (shouldPush) {
+				entities.push(entity);
 			}
 		}
 
