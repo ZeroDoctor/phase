@@ -12,14 +12,14 @@ import hxd.Event;
 class ColliderSystem extends System implements ISystem {
     private var entities:Array<Int>;
     private var sceneSize:Bounds;
-    private var resolutionFuncs:Array<(ColliderComponentsDef, ColliderComponentsDef)->Void>;
+    private var resolutionFuncs:Array<(main:ColliderComponentsDef, other:ColliderComponentsDef)->Void>;
 
 
-    public function new(sh:SceneHandler):Void {
+    public function new(sh:SceneHandler, sceneSize:Bounds):Void {
         super(sh);
 
-        this.sceneSize = Bounds.fromValues(-5000.0, -5000.0, 10000.0, 10000.0);
-        this.resolutionFuncs = new Array<(ColliderComponentsDef, ColliderComponentsDef)->Void>();
+        this.sceneSize = sceneSize;
+        this.resolutionFuncs = new Array<(main:ColliderComponentsDef, other:ColliderComponentsDef)->Void>();
     }
 
     public function addResolutionFunction(funcs:(ColliderComponentsDef, ColliderComponentsDef)->Void):Void {
@@ -61,36 +61,37 @@ class ColliderSystem extends System implements ISystem {
 
     public function input(event:Event):Void {}
 
-    private function collisionResolution(entity:Int, potentialCollidedEntities:Array<Int>):Void {
-        var entityComps:ColliderComponentsDef = getColliderComponents(sh, entity);
+    private function collisionResolution(entityID:Int, potentialCollidedEntities:Array<Int>):Void {
+        var entityComps:ColliderComponentsDef = getColliderComponents(sh, entityID);
         if (!entityComps.ok) {
-            trace('failed to get required components from [entity=${entity}]');
+            trace('failed to get required components from [entity=${entityID}]');
             return;
         }
         if (entityComps.collider.type == ColliderType.NONE) return;
 
-        for(collidedEntity in potentialCollidedEntities) {
-            if (entity == collidedEntity) continue;
+        for(potentialID in potentialCollidedEntities) {
+            if (entityID == potentialID) continue; // can't collided with itself
             
-            var collidedComps:ColliderComponentsDef = getColliderComponents(sh, collidedEntity);
-            if (!collidedComps.ok) {
-                trace('failed to get required components from collided [entity=${collidedEntity}]');
+            var potentialComps:ColliderComponentsDef = getColliderComponents(sh, potentialID);
+            if (!potentialComps.ok) {
+                trace('failed to get required components from collided [entity=${potentialID}]');
                 continue;
             }
-            if(collidedComps.collider.type == ColliderType.NONE) continue;
+            if(potentialComps.collider.type == ColliderType.NONE) continue; // TODO: will update with more features
 
-            var e:Bounds = Bounds.fromValues(
+            var entityBounds:Bounds = Bounds.fromValues(
                 entityComps.bounds.x, entityComps.bounds.y, 
                 entityComps.bounds.width, entityComps.bounds.height
             );
-            var c:Bounds = Bounds.fromValues(
-                collidedComps.bounds.x, collidedComps.bounds.y, 
-                collidedComps.bounds.width, collidedComps.bounds.height
+            var potentialBounds:Bounds = Bounds.fromValues(
+                potentialComps.bounds.x, potentialComps.bounds.y, 
+                potentialComps.bounds.width, potentialComps.bounds.height
             );
-            if(!e.intersects(c)) continue;
+            if(!entityBounds.intersects(potentialBounds)) continue; // does not collide
 
+            // iterate through collision resolution functions i.e. health, velocity, damage callback
             for(funcs in this.resolutionFuncs) {
-                funcs(entityComps, collidedComps);
+                funcs(entityComps, potentialComps);
             }
         }
     }

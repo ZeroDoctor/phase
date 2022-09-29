@@ -7,6 +7,7 @@ import init.Init;
 import handler.SystemHandler;
 import handler.SceneHandler;
 import hxd.res.DefaultFont;
+import h2d.col.Bounds;
 
 class PlayState implements IState {
     private var scene:h2d.Scene;
@@ -43,19 +44,29 @@ class PlayState implements IState {
 
         this.sceneHandler = new SceneHandler(scene, g);
         this.systemHandler = new SystemHandler(sceneHandler);
-
-        var colliderSystem:ColliderSystem = new ColliderSystem(sceneHandler);
-        systemHandler.register(colliderSystem);
         
         var velocitySystem:VelocitySystem = new VelocitySystem(sceneHandler);
         systemHandler.register(velocitySystem);
+
+        var sceneSize:Bounds = Bounds.fromValues(-2000.0, -2000.0, 4000.0, 4000.0);
+        var colliderSystem:ColliderSystem = new ColliderSystem(sceneHandler, sceneSize);
+        systemHandler.register(colliderSystem);
         
         var renderGeometrySystem:RenderGeometrySystem = new RenderGeometrySystem(sceneHandler);
         systemHandler.register(renderGeometrySystem);
 
-        colliderSystem.addResolutionFunction(function(collider, otherCollider):Void {
-            collider.velocity.direction = collider.velocity.direction + Math.PI;
-            otherCollider.velocity.direction = otherCollider.velocity.direction + Math.PI;
+        colliderSystem.addResolutionFunction(function(main, other):Void {
+            var aDir:Float = main.velocity.direction;
+            var bDir:Float = other.velocity.direction;
+
+            main.velocity.direction = bDir;
+            other.velocity.direction = aDir;
+
+            // main.velocity.direction = (main.velocity.direction + Math.PI) % (2*Math.PI);
+            // other.velocity.direction = (other.velocity.direction + Math.PI) % (2*Math.PI);
+
+            // main.velocity.direction = (main.velocity.direction + Math.PI);
+            // other.velocity.direction = (other.velocity.direction + Math.PI);
         });
 
         initScene(sceneHandler);
@@ -66,6 +77,7 @@ class PlayState implements IState {
     }
 
     public function render(e:h3d.Engine):Void {
+        g.clear();
         fpsText.text = "fps: "+Std.string(e.fps);
         drawCallText.text = "draw calls: "+Std.string(e.drawCalls);
         systemHandler.render(e);
@@ -79,14 +91,18 @@ class PlayState implements IState {
 function initScene(sceneHandler:SceneHandler):Void {
     var init:Init = new Init(sceneHandler);
 
-    // init.newEntity(200, 200, Std.random(0xFFFFFF), 5.0, 0.0);
-    // init.newEntity(250, 200, Std.random(0xFFFFFF), 5.0, Math.PI);
+    var entityCount:Int = 350;
+    var row:Int = 25;
+    var col:Int = 25;
+    var spacing:Float = 25.0;
+    var xOffset:Int = 150;
+    var yOffset:Int = 150;
 
-    var entityCount:Int = 300;
     for (i in 0...entityCount) {
         init.newEntity(
-            Std.random(500)+(i*15.0), Std.random(500)+(i*15.0), Std.random(0xFFFFFF),
-            15.0, Math.random()
+            ((i%col)*spacing)+xOffset, ((i/row)*spacing)+yOffset,
+            Std.random(0x707070) + 0x8F8F8F,
+            25.0, Math.random()+i
         );
     }
 }
