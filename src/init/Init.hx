@@ -28,8 +28,9 @@ class Init {
 		});
 
 		var geometry:RenderGeometry = new RenderGeometry({
-			shape: Shape.RECT,
+			shape: Shape.OUTLINE_RECT,
 			color: color,
+			lineSize: 1.0,
 		});
 
 		var collider:Collider = new Collider({
