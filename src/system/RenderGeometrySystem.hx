@@ -40,7 +40,7 @@ class RenderGeometrySystem extends System implements ISystem {
 				case _: continue;
 			}
 
-			if (geo.color > 0) {
+			if (geo.color > 0 && geo.shape != OUTLINE_RECT) {
 				sh.getGraphics().beginFill(geo.color, 1.0);
 			}
 
@@ -51,9 +51,12 @@ class RenderGeometrySystem extends System implements ISystem {
 					sh.getGraphics().drawCircle(bounds.x, bounds.y, bounds.radius, 0);
 				case ELLIPSE:
 					sh.getGraphics().drawEllipse(bounds.x, bounds.y, bounds.radiusX, bounds.radiusY, 0, 0);
+				case OUTLINE_RECT:
+					sh.getGraphics().lineStyle(geo.lineSize, geo.color);
+					sh.getGraphics().drawRect(bounds.x, bounds.y, bounds.width, bounds.height);
 			}
 
-			if (geo.color > 0) {
+			if (geo.color > 0 && geo.shape != OUTLINE_RECT) {
 				sh.getGraphics().endFill();
 			}
 		}
