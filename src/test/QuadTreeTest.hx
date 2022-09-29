@@ -1,5 +1,6 @@
 package test;
 
+import haxe.Exception;
 import haxe.ds.GenericStack;
 import math.FastSpacialQuadTree;
 import math.ISpacialQuadTree;
@@ -34,8 +35,6 @@ class TreeTest {
     }
 
     public function Normal():Void {
-        trace("--------------");
-
         var tree:SpacialQuadTree<Int> = new SpacialQuadTree<Int>(space, -1, 16, 5);
         this.populate(tree);
 
@@ -58,23 +57,31 @@ class TreeTest {
     }
 
     public function Fast():Void {
-        trace("--------------");
-
         var tree:FastSpacialQuadTree<Int> = new FastSpacialQuadTree<Int>(space, -1, 16, 4);
         this.populate(tree);
 
-        var stack:GenericStack<FastQuadTreeNode<Int>> = new GenericStack<FastQuadTreeNode<Int>>();
-        stack.add(tree.getRoot());
+        var gotStack:GenericStack<FastQuadTreeNode<Int>> = new GenericStack<FastQuadTreeNode<Int>>();
+        gotStack.add(tree.getRoot());
 
-        while(!stack.isEmpty()) {
-            var temp:FastQuadTreeNode<Int> = stack.pop();
-            if(temp.bucket.length <= 0 ) continue;
+        var wantStack:GenericStack<Array<Int>> = new GenericStack<Array<Int>>();
+        wantStack.add([5]); // top left | child
+        wantStack.add([6]); // bottom left | child
+        wantStack.add([7,8]); // bottom right | 1 child
+        wantStack.add([1,2,3,4]); // at root
 
-            trace(temp);
+        while(!gotStack.isEmpty()) {
+            var gotNode:FastQuadTreeNode<Int> = gotStack.pop();
+            if(gotNode.bucket.length <= 0 ) continue;
 
-            for(i in 0...temp.children.length) {
-                if(temp.children[i] == null) continue;
-                stack.add(temp.children[i]);
+            var want:Array<Int> = wantStack.pop();
+            for(i in 0...gotNode.bucket.length) {
+                if(gotNode.bucket[i] != want[i]) 
+                    throw new Exception('[ERROR] [got=${gotNode.bucket}] [want=${want}]');
+            }
+
+            for(i in 0...gotNode.children.length) {
+                if(gotNode.children[i] == null) continue;
+                gotStack.add(gotNode.children[i]);
             }
         }
     }

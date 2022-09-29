@@ -43,13 +43,13 @@ class Main extends hxd.App {
     }
 
     public static function main():Void {
-        trace("------ entity ------");
+        trace("------ testing entity ------");
         new EntityTest();
-        trace("------ bounds ------");
+        trace("------ testing bounds ------");
         new BoundsTest();
-        trace("------ tree ------");
+        trace("------ testing tree ------");
         var treeTest:TreeTest = new TreeTest();
-        treeTest.Normal();
+        // treeTest.Normal();
         treeTest.Fast();
         trace("------ main ------");
         new Main();
