@@ -60,12 +60,10 @@ class ColliderSystem extends System implements ISystem {
 			var x:Float = comps.bounds.x + (comps.velocity.magnitude * Math.cos(comps.velocity.direction)) * dt;
 			var y:Float = comps.bounds.y + (comps.velocity.magnitude * Math.sin(comps.velocity.direction)) * dt;
 
-            // var b:Bounds = Bounds.fromValues(comps.bounds.x, comps.bounds.y, comps.bounds.width, comps.bounds.height);
             var b:Bounds = Bounds.fromValues(x, y, comps.bounds.width, comps.bounds.height);
             tree.insert(b, entityID);
         }
 
-        // this sucks for some reason (collision wise)
         for(entityID in entities) {
             var comps:ColliderComponentsDef = getColliderComponents(sh, entityID);
             if (!comps.ok) {
@@ -76,7 +74,6 @@ class ColliderSystem extends System implements ISystem {
             var x:Float = comps.bounds.x + (comps.velocity.magnitude * Math.cos(comps.velocity.direction)) * dt;
             var y:Float = comps.bounds.y + (comps.velocity.magnitude * Math.sin(comps.velocity.direction)) * dt;
 
-            // var b:Bounds = Bounds.fromValues(comps.bounds.x, comps.bounds.y, comps.bounds.width, comps.bounds.height);
             var b:Bounds = Bounds.fromValues(x, y, comps.bounds.width, comps.bounds.height);
             var potentialCollidedEntities:Array<Int> = tree.search(b);
             this.collisionResolution(entityID, potentialCollidedEntities);

@@ -38,11 +38,6 @@ class VelocitySystem extends System implements ISystem {
 				case _: continue;
 			}
 
-			// var shouldChange:Bool = Std.random(100) % 50 == 0;
-			// if (shouldChange) {
-			// 	velocity.direction += Math.random();
-			// }
-
 			bounds.x += (velocity.magnitude * Math.cos(velocity.direction)) * dt;
 			bounds.y += (velocity.magnitude * Math.sin(velocity.direction)) * dt;
 		}
