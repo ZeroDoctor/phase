@@ -50,7 +50,7 @@ class Main extends hxd.App {
         trace("------ testing tree ------");
         var treeTest:TreeTest = new TreeTest();
         // treeTest.Normal();
-        treeTest.Fast();
+        // treeTest.Fast();
         trace("------ main ------");
         new Main();
     }

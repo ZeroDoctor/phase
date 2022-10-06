@@ -1,6 +1,5 @@
 package init;
 
-import h3d.Vector;
 import component.Velocity;
 import component.RidgidBody;
 import component.Collider;
@@ -22,8 +21,8 @@ class Init {
 		var bounds:IComponent = new Bounds({
 			x: x,
 			y: y,
-			width: 15.0,
-			height: 15.0,
+			width: 25.0,
+			height: 25.0,
 			radius: 7.0,
 		});
 
