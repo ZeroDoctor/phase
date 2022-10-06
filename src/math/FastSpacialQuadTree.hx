@@ -107,7 +107,6 @@ class FastSpacialQuadTree<T> implements ISpacialQuadTree<T> {
 			}
 		}
 
-		throw new Exception("should never happen");
 		return false;
 	}
 

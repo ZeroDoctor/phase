@@ -40,24 +40,22 @@ class RenderGeometrySystem extends System implements ISystem {
 				case _: continue;
 			}
 
-			if (geo.color > 0 && geo.shape != OUTLINE_RECT) {
-				sh.getGraphics().beginFill(geo.color, 1.0);
-			}
-
 			switch (geo.shape) {
 				case RECT:
+					sh.getGraphics().beginFill(geo.color, geo.alpha);
 					sh.getGraphics().drawRect(bounds.x, bounds.y, bounds.width, bounds.height);
+					sh.getGraphics().endFill();
 				case CIRCLE:
+					sh.getGraphics().beginFill(geo.color, geo.alpha);
 					sh.getGraphics().drawCircle(bounds.x, bounds.y, bounds.radius, 0);
+					sh.getGraphics().endFill();
 				case ELLIPSE:
+					sh.getGraphics().beginFill(geo.color, geo.alpha);
 					sh.getGraphics().drawEllipse(bounds.x, bounds.y, bounds.radiusX, bounds.radiusY, 0, 0);
+					sh.getGraphics().endFill();
 				case OUTLINE_RECT:
 					sh.getGraphics().lineStyle(geo.lineSize, geo.color);
 					sh.getGraphics().drawRect(bounds.x, bounds.y, bounds.width, bounds.height);
-			}
-
-			if (geo.color > 0 && geo.shape != OUTLINE_RECT) {
-				sh.getGraphics().endFill();
 			}
 		}
 	}

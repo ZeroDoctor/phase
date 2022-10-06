@@ -66,6 +66,17 @@ class PlayState implements IState {
             main.velocity.direction = Math.PI + angle;
             other.velocity.direction = angle;
 
+            main.velocity.magnitude -= 1.0;
+            other.velocity.magnitude -= 1.0;
+
+            if (main.velocity.magnitude < 0) {
+                main.velocity.magnitude = 0;
+            }
+
+            if (other.velocity.magnitude < 0) {
+                other.velocity.magnitude = 0;
+            }
+
 			var optRender:Option<component.RenderGeometry> = sceneHandler.getComponent(main.entityID, "RenderGeometry");
 			var render:component.RenderGeometry = switch (optRender) {
 				case Some(v): v;
@@ -107,20 +118,20 @@ class PlayState implements IState {
 function initScene(sceneHandler:SceneHandler):Void {
     var init:Init = new Init(sceneHandler);
 
-    var entityCount:Int = 100;
+    var entityCount:Int = 500;
     var row:Int = 25;
     var col:Int = 25;
     var spacing:Float = 35.0;
-    var xOffset:Int = cast(300/2, Int);
-    var yOffset:Int = cast(768/2, Int);
+    var xOffset:Int = 100;
+    var yOffset:Int = 100;
 
-    var initSpeed:Float = 25.0;
+    var initSpeed:Float = 100.0;
 
     for (i in 0...entityCount) {
         init.newEntity(
             ((i%col)*spacing)+xOffset, ((i/row)*spacing)+yOffset,
             Std.random(0x707070) + 0x8F8F8F,
-            initSpeed, Math.random()+i
+            initSpeed, Math.cos(i%col) + Math.sin(i/row)
         );
     }
 }
