@@ -1,5 +1,6 @@
 package system;
 
+import component.RenderGeometry;
 import component.Collider.ColliderType;
 import haxe.ds.Option;
 import h2d.col.Bounds;
@@ -37,23 +38,49 @@ class ColliderSystem extends System implements ISystem {
     public function init():Void {}
 
     public function update(entities:Array<Int>, dt:Float):Void {
-        var tree:ISpacialQuadTree<Int> = new FastSpacialQuadTree<Int>(this.sceneSize, -1, 64);
+        var tree:ISpacialQuadTree<Int> = new FastSpacialQuadTree<Int>(this.sceneSize, -1, 64, 20);
 
-        for (entity in entities) {
-            var optBounds:Option<component.Bounds> = sh.getComponent(entity, "Bounds");
-            var bounds:component.Bounds = switch (optBounds) {
-                case Some(v): v;
-                case _:
-                    trace('failed to get bounds component with [entity=${entity}]');
-                    continue;
+        for (entityID in entities) {
+            var comps:ColliderComponentsDef = getColliderComponents(sh, entityID);
+            if (!comps.ok) {
+                trace('failed to get required components from [entity=${entityID}]');
+                continue;
+            }
+            if (comps.collider.type == ColliderType.NONE) continue;
+
+			var optRender:Option<component.RenderGeometry> = sh.getComponent(entityID, "RenderGeometry");
+			var render:component.RenderGeometry = switch (optRender) {
+				case Some(v): v;
+				case _:
+					trace('failed to get bounds component with [entity=${entityID}]');
+                    new component.RenderGeometry({});
+			}
+            render.color = 0x0DD0DD;
+
+			var x:Float = comps.bounds.x + (comps.velocity.magnitude * Math.cos(comps.velocity.direction)) * dt;
+			var y:Float = comps.bounds.y + (comps.velocity.magnitude * Math.sin(comps.velocity.direction)) * dt;
+
+            // var b:Bounds = Bounds.fromValues(comps.bounds.x, comps.bounds.y, comps.bounds.width, comps.bounds.height);
+            var b:Bounds = Bounds.fromValues(x, y, comps.bounds.width, comps.bounds.height);
+            tree.insert(b, entityID);
+        }
+
+        // this sucks for some reason (collision wise)
+        for(entityID in entities) {
+            var comps:ColliderComponentsDef = getColliderComponents(sh, entityID);
+            if (!comps.ok) {
+                trace('failed to get required components from [entity=${entityID}]');
+                continue;
             }
 
-            var b:Bounds = Bounds.fromValues(bounds.x, bounds.y, bounds.width, bounds.height);
-            var ok:Bool = tree.insert(b, entity);
-            if (!ok) continue;
+            var x:Float = comps.bounds.x + (comps.velocity.magnitude * Math.cos(comps.velocity.direction)) * dt;
+            var y:Float = comps.bounds.y + (comps.velocity.magnitude * Math.sin(comps.velocity.direction)) * dt;
 
+            // var b:Bounds = Bounds.fromValues(comps.bounds.x, comps.bounds.y, comps.bounds.width, comps.bounds.height);
+            var b:Bounds = Bounds.fromValues(x, y, comps.bounds.width, comps.bounds.height);
             var potentialCollidedEntities:Array<Int> = tree.search(b);
-            this.collisionResolution(entity, potentialCollidedEntities);
+            this.collisionResolution(entityID, potentialCollidedEntities);
+            tree.remove(b, entityID);
         }
     }
 
@@ -67,17 +94,15 @@ class ColliderSystem extends System implements ISystem {
             trace('failed to get required components from [entity=${entityID}]');
             return;
         }
-        if (entityComps.collider.type == ColliderType.NONE) return;
 
         for(potentialID in potentialCollidedEntities) {
             if (entityID == potentialID) continue; // can't collided with itself
-            
+
             var potentialComps:ColliderComponentsDef = getColliderComponents(sh, potentialID);
             if (!potentialComps.ok) {
                 trace('failed to get required components from collided [entity=${potentialID}]');
                 continue;
             }
-            if(potentialComps.collider.type == ColliderType.NONE) continue; // TODO: will update with more features
 
             var entityBounds:Bounds = Bounds.fromValues(
                 entityComps.bounds.x, entityComps.bounds.y, 
