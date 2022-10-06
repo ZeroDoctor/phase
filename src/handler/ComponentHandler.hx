@@ -7,7 +7,6 @@ import component.IComponent;
 @:generic
 private class Components<T:IComponent> {
 	private var componentMap:Map<Int, T>;
-	private var signature:String;
 
 	public function new():Void {
 		this.componentMap = new Map<Int, T>();
@@ -23,7 +22,6 @@ private class Components<T:IComponent> {
 
 	public function push(id:Int, component:T):Void {
 		this.componentMap.set(id, component);
-		this.signature = component.getName();
 	}
 
 	public function remove(id:Int):Bool {

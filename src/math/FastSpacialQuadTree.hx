@@ -1,5 +1,6 @@
 package math;
 
+import haxe.Exception;
 import math.SpacialQuadTree.TOPLEFT;
 import math.SpacialQuadTree.TOPRIGHT;
 import math.SpacialQuadTree.BOTLEFT;
@@ -12,50 +13,12 @@ import haxe.ds.Vector;
 class FastQuadTreeNode<T> {
 	public var bounds:Bounds;
 	public var children:Vector<FastQuadTreeNode<T>>;
-
-	// bucket should only be initialized if max depth is reached or using FastSpacialQuadTree
 	public var bucket:Array<T>;
 
 	public function new(bounds:Bounds):Void {
 		this.bounds = bounds;
 		this.children = new Vector<FastQuadTreeNode<T>>(4);
 		this.bucket = new Array<T>();
-	}
-
-	public function insertChild(bounds:Bounds):Int {
-		if (getTopLeftBounds().intersects(bounds)) {
-			if (this.children[TOPLEFT] == null) {
-				this.children[TOPLEFT] = new FastQuadTreeNode<T>(getTopLeftBounds());
-			}
-
-			return TOPLEFT;
-		}
-
-		if (getTopRightBounds().intersects(bounds)) {
-			if (this.children[TOPRIGHT] == null) {
-				this.children[TOPRIGHT] = new FastQuadTreeNode<T>(getTopRightBounds());
-			}
-
-			return TOPRIGHT;
-		}
-
-		if (getBotLeftBounds().intersects(bounds)) {
-			if (this.children[BOTLEFT] == null) {
-				this.children[BOTLEFT] = new FastQuadTreeNode<T>(getBotLeftBounds());
-			}
-
-			return BOTLEFT;
-		}
-
-		if (getBotRightBounds().intersects(bounds)) {
-			if (this.children[BOTRIGHT] == null) {
-				this.children[BOTRIGHT] = new FastQuadTreeNode<T>(getBotRightBounds());
-			}
-
-			return BOTRIGHT;
-		}
-
-		return -1;
 	}
 
 	// ------- HELPER -------
@@ -82,7 +45,7 @@ class FastSpacialQuadTree<T> implements ISpacialQuadTree<T> {
 	private var depth:Int;
 	private var capacity:Int;
 
-	public function new(bounds:Bounds, init:T, depth:Int, capacity:Int = 5):Void {
+	public function new(bounds:Bounds, init:T, depth:Int, capacity:Int = 10):Void {
 		this.depth = depth;
 		this.capacity = capacity;
 		root = new FastQuadTreeNode(bounds);
@@ -96,14 +59,12 @@ class FastSpacialQuadTree<T> implements ISpacialQuadTree<T> {
 
 		while (!stack.isEmpty()) {
 			var temp:FastQuadTreeNode<T> = stack.pop();
-			if (!temp.bounds.intersects(bounds))
-				continue;
+			if (!temp.bounds.intersects(bounds)) continue;
 
 			result = result.concat(temp.bucket);
 
 			for (i in 0...temp.children.length) {
-				if (temp.children[i] == null)
-					continue;
+				if (temp.children[i] == null) continue;
 
 				stack.add(temp.children[i]);
 			}
@@ -126,16 +87,27 @@ class FastSpacialQuadTree<T> implements ISpacialQuadTree<T> {
 				return true;
 			}
 
-			var childIndex:Int = temp.insertChild(bounds);
-			if (childIndex == -1) {
-				trace("[ERROR | FSQT(insert)] should never happen but [error=node failed to subdivide]"); // node failed to subdivide
-				return false;
-			}
+			for (i in 0...temp.children.length) {
+				if (temp.children[i] == null) {
+					switch (i) {
+						case TOPLEFT: 
+							temp.children[i] = new FastQuadTreeNode<T>(temp.getTopLeftBounds());
+						case TOPRIGHT: 
+							temp.children[i] = new FastQuadTreeNode<T>(temp.getTopRightBounds());
+						case BOTLEFT: 
+							temp.children[i] = new FastQuadTreeNode<T>(temp.getBotLeftBounds());
+						case BOTRIGHT: 
+							temp.children[i] = new FastQuadTreeNode<T>(temp.getBotRightBounds());
+						default:
+							throw new Exception("invalid number of children");
+					}
+				}
 
-			stack.add(temp.children[childIndex]);
+				stack.add(temp.children[i]);
+			}
 		}
 
-		// should never happen
+		throw new Exception("should never happen");
 		return false;
 	}
 
