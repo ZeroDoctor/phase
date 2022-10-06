@@ -5,6 +5,7 @@ enum Shape {
 	ELLIPSE;
 	RECT;
 	OUTLINE_RECT;
+	OUTLINE_CIRCLE;
 }
 
 typedef RenderGeometryDef = {

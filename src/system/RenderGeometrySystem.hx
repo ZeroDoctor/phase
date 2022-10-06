@@ -56,6 +56,9 @@ class RenderGeometrySystem extends System implements ISystem {
 				case OUTLINE_RECT:
 					sh.getGraphics().lineStyle(geo.lineSize, geo.color);
 					sh.getGraphics().drawRect(bounds.x, bounds.y, bounds.width, bounds.height);
+				case OUTLINE_CIRCLE:
+					sh.getGraphics().lineStyle(geo.lineSize, geo.color);
+					sh.getGraphics().drawCircle(bounds.x, bounds.y, bounds.radius, 0);
 			}
 		}
 	}

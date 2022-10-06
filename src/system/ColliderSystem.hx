@@ -55,7 +55,7 @@ class ColliderSystem extends System implements ISystem {
 					trace('failed to get bounds component with [entity=${entityID}]');
                     new component.RenderGeometry({});
 			}
-            render.color = 0x0DD0DD;
+            render.color = 0xFFFFFF;
 
 			var x:Float = comps.bounds.x + (comps.velocity.magnitude * Math.cos(comps.velocity.direction)) * dt;
 			var y:Float = comps.bounds.y + (comps.velocity.magnitude * Math.sin(comps.velocity.direction)) * dt;

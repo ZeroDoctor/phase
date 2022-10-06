@@ -57,8 +57,7 @@ class SystemHandler {
 			}
 		}
 
-		if (system == null)
-			return entities;
+		if (system == null) return entities;
 
 		for (entity in sceneHandler.entityIterator()) {
 			var shouldPush:Bool = true;

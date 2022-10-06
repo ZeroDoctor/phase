@@ -66,17 +66,6 @@ class PlayState implements IState {
             main.velocity.direction = Math.PI + angle;
             other.velocity.direction = angle;
 
-            main.velocity.magnitude -= 1.0;
-            other.velocity.magnitude -= 1.0;
-
-            if (main.velocity.magnitude < 0) {
-                main.velocity.magnitude = 0;
-            }
-
-            if (other.velocity.magnitude < 0) {
-                other.velocity.magnitude = 0;
-            }
-
 			var optRender:Option<component.RenderGeometry> = sceneHandler.getComponent(main.entityID, "RenderGeometry");
 			var render:component.RenderGeometry = switch (optRender) {
 				case Some(v): v;
@@ -84,7 +73,7 @@ class PlayState implements IState {
 					trace('failed to get bounds component with [entity=${main.entityID}]');
                     new component.RenderGeometry({});
 			}
-            render.color = 0xFFFFFF;
+            render.color = 0x00FF00;
 
 			var optRender:Option<component.RenderGeometry> = sceneHandler.getComponent(other.entityID, "RenderGeometry");
 			var render:component.RenderGeometry = switch (optRender) {
@@ -93,7 +82,7 @@ class PlayState implements IState {
 					trace('failed to get bounds component with [entity=${main.entityID}]');
                     new component.RenderGeometry({});
 			}
-            render.color = 0xFF00FF;
+            render.color = 0xFF0000;
         });
 
         initScene(sceneHandler);
@@ -118,20 +107,20 @@ class PlayState implements IState {
 function initScene(sceneHandler:SceneHandler):Void {
     var init:Init = new Init(sceneHandler);
 
-    var entityCount:Int = 500;
+    var entityCount:Int = 1000;
     var row:Int = 25;
-    var col:Int = 25;
-    var spacing:Float = 35.0;
-    var xOffset:Int = 100;
-    var yOffset:Int = 100;
+    var col:Int = 75;
+    var spacing:Float = 20.0;
+    var xOffset:Int = 50;
+    var yOffset:Int = 50;
 
-    var initSpeed:Float = 100.0;
+    var initSpeed:Float = 40.0;
 
     for (i in 0...entityCount) {
         init.newEntity(
             ((i%col)*spacing)+xOffset, ((i/row)*spacing)+yOffset,
-            Std.random(0x707070) + 0x8F8F8F,
-            initSpeed, Math.cos(i%col) + Math.sin(i/row)
+            0xFFFFFF,
+            initSpeed, 2*Math.cos(i%col) + 2*Math.sin(i/row)
         );
     }
 }

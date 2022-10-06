@@ -21,8 +21,8 @@ class Init {
 		var bounds:IComponent = new Bounds({
 			x: x,
 			y: y,
-			width: 15.0,
-			height: 15.0,
+			width: 12.5,
+			height: 12.5,
 			radius: 7.0,
 		});
 
