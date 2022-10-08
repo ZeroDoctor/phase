@@ -107,7 +107,7 @@ class PlayState implements IState {
 function initScene(sceneHandler:SceneHandler):Void {
     var init:Init = new Init(sceneHandler);
 
-    var entityCount:Int = 1000;
+    var entityCount:Int = 500;
     var row:Int = 25;
     var col:Int = 75;
     var spacing:Float = 20.0;

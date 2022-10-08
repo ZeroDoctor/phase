@@ -1,6 +1,5 @@
 package handler;
 
-import js.html.IntersectionObserver;
 import haxe.ds.Option;
 import component.IComponent;
 
