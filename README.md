@@ -19,8 +19,8 @@ Hilter and his ragtag crew - Nope!...
 
 Aw screw it! Multideminsional punks brawl it out on the greatest stage in the multiverse.
 The Phase. It's said the last thing you'll ever see is _____. Some will thrive, but others thrashed and eaten alive!
-Post apocalyptic worlds meets post apocalyptic worlds battling it out for each other reasource. 
-No sense nonsense about nonsensical worlds. 
+Post apocalyptic worlds meets post apocalyptic worlds battling it out for each other reasource.
+No sense nonsense about nonsensical worlds.
 
 No teddy bears here. Okay maybe like one
 
