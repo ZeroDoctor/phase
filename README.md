@@ -45,3 +45,28 @@ No teddy bears here. Okay maybe like one
 - You need to leave. - Starbucks Manager
 
   That's right! You'll leave with enjoyment and satifaction when playing this game
+
+## Serious Talk
+
+- codespaces command for donwloading haxe:
+
+```sh
+sudo apt update && \
+sudo apt upgrade -y && \
+sudo add-apt-repository ppa:haxe/releases -y && \
+sudo apt-get update && \
+sudo apt-get install haxe -y && \
+mkdir ~/haxelib && haxelib setup ~/haxelib
+```
+
+- install haxe dependencies:
+
+```sh
+haxelib install build.hxml
+```
+
+- compile haxe src:
+
+```sh
+haxe build.hxml
+```
