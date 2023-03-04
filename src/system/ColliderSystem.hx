@@ -4,6 +4,7 @@ import component.RenderGeometry;
 import component.Collider.ColliderType;
 import haxe.ds.Option;
 import h2d.col.Bounds;
+import math.SpacialQuadTree;
 import math.FastSpacialQuadTree;
 import math.ISpacialQuadTree;
 import handler.SceneHandler;

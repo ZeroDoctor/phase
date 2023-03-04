@@ -1,5 +1,6 @@
 package math;
 
+import h2d.Console;
 import haxe.Exception;
 import h2d.col.Point;
 import haxe.ds.GenericStack;
@@ -106,7 +107,7 @@ class QuadTreeNode<T> {
 /**
   SpacialQuadTree 
   an iterate implementation instead of a recursive
-  why?... its less common
+  why?... its less common that's why
  **/
 @:generic
 class SpacialQuadTree<T> implements ISpacialQuadTree<T> {
@@ -140,7 +141,7 @@ class SpacialQuadTree<T> implements ISpacialQuadTree<T> {
                         case Some(b):
                            result.push(b);
                         case _:
-                           throw new Exception("faield to find element");
+                           throw new Exception("failed to find element");
                      }
                   }
                }
@@ -255,6 +256,8 @@ class SpacialQuadTree<T> implements ISpacialQuadTree<T> {
             var maxSize:Point = new Point();
             var maxSizeIndex:Int = -1;
             for (i in 0...temp.children.length) {
+               if(temp.children[i] == null) continue; // TODO: fix when child does not exists
+
                var size:Point = temp.children[i].bounds.getSize();
                if (size.length() > maxSize.length()) {
                   maxSize = size;

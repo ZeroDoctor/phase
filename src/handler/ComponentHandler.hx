@@ -65,7 +65,7 @@ class ComponentHandler {
 		var comps:Components<IComponent> = this.componentSetMap.get(name);
 		var opt:IComponent = comps.get(id);
 		if (opt != null) {
-			var t:T = cast opt;
+			var t:T = cast opt; // <-- optimize this by avoiding cast
 			return Some(t);
 		}
 
