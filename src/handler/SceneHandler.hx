@@ -57,7 +57,7 @@ class SceneHandler {
 	}
 
 	@:generic
-	public function getComponent<T:IComponent>(id:Int, name:String):Option<T> {
+	public function getComponent<T:IComponent>(id:Int, name:String):Option<Any> {
 		return this.componentHandler.getComponent(id, name);
 	}
 

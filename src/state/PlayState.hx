@@ -66,7 +66,7 @@ class PlayState implements IState {
             main.velocity.direction = Math.PI + angle;
             other.velocity.direction = angle;
 
-			var optRender:Option<component.RenderGeometry> = sceneHandler.getComponent(main.entityID, "RenderGeometry");
+			var optRender:Option<Any> = sceneHandler.getComponent(main.entityID, "RenderGeometry");
 			var render:component.RenderGeometry = switch (optRender) {
 				case Some(v): v;
 				case _:
@@ -75,7 +75,7 @@ class PlayState implements IState {
 			}
             render.color = 0x00FF00;
 
-			var optRender:Option<component.RenderGeometry> = sceneHandler.getComponent(other.entityID, "RenderGeometry");
+			var optRender:Option<Any> = sceneHandler.getComponent(other.entityID, "RenderGeometry");
 			var render:component.RenderGeometry = switch (optRender) {
 				case Some(v): v;
 				case _:

@@ -49,7 +49,7 @@ class ColliderSystem extends System implements ISystem {
             }
             if (comps.collider.type == ColliderType.NONE) continue;
 
-			var optRender:Option<component.RenderGeometry> = sh.getComponent(entityID, "RenderGeometry");
+			var optRender:Option<Any> = sh.getComponent(entityID, "RenderGeometry");
 			var render:component.RenderGeometry = switch (optRender) {
 				case Some(v): v;
 				case _:
@@ -134,7 +134,7 @@ function getColliderComponents(sh:SceneHandler, entity:Int):ColliderComponentsDe
         entityID: entity,
     };
 
-    var optCollider:Option<component.Collider> = sh.getComponent(entity, "Collider");
+    var optCollider:Option<Any> = sh.getComponent(entity, "Collider");
     comps.collider = switch (optCollider) {
         case Some(v): v;
         case _:
@@ -142,7 +142,7 @@ function getColliderComponents(sh:SceneHandler, entity:Int):ColliderComponentsDe
             return comps;
     }
 
-    var optBounds:Option<component.Bounds> = sh.getComponent(entity, "Bounds");
+    var optBounds:Option<Any> = sh.getComponent(entity, "Bounds");
     comps.bounds = switch (optBounds) {
         case Some(v): v;
         case _:
@@ -150,7 +150,7 @@ function getColliderComponents(sh:SceneHandler, entity:Int):ColliderComponentsDe
             return comps;
     }
 
-    var optVelocity:Option<component.Velocity> = sh.getComponent(entity, "Velocity");
+    var optVelocity:Option<Any> = sh.getComponent(entity, "Velocity");
     comps.velocity = switch (optVelocity) {
         case Some(v): v;
         case _:

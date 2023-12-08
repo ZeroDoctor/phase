@@ -1,5 +1,7 @@
 package handler;
 
+import js.html.TableRowElement;
+import format.swf.Constants.TagId;
 import haxe.ds.Option;
 import component.IComponent;
 
@@ -32,7 +34,7 @@ private class Components<T:IComponent> {
 	}
 }
 
-class ComponentHandler {
+class ComponentHandler{
 	private var componentSetMap:Map<String, Components<IComponent>>;
 
 	public function new():Void {
@@ -56,8 +58,7 @@ class ComponentHandler {
 		return this.componentSetMap.get(name).has(id);
 	}
 
-	@:generic
-	public function getComponent<T:IComponent>(id:Int, name:String):Option<T> {
+	public function getComponent(id:Int, name:String):Option<IComponent> {
 		if (!this.componentSetMap.exists(name)) {
 			return None;
 		}
@@ -65,8 +66,8 @@ class ComponentHandler {
 		var comps:Components<IComponent> = this.componentSetMap.get(name);
 		var opt:IComponent = comps.get(id);
 		if (opt != null) {
-			var t:T = cast opt; // <-- optimize this by avoiding cast
-			return Some(t);
+			// var t:T = cast opt; // <-- optimize this by avoiding cast
+			return Some(opt);
 		}
 
 		return None;

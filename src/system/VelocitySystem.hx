@@ -26,13 +26,13 @@ class VelocitySystem extends System implements ISystem {
 
 	public function update(entities:Array<Int>, dt:Float):Void {
 		for (e in entities) {
-			var optBounds:Option<Bounds> = sh.getComponent(e, "Bounds");
+			var optBounds:Option<Any> = sh.getComponent(e, "Bounds");
 			var bounds:Bounds = switch (optBounds) {
 				case Some(v): v;
 				case _: continue;
 			}
 
-			var optVelocity:Option<Velocity> = sh.getComponent(e, "Velocity");
+			var optVelocity:Option<Any> = sh.getComponent(e, "Velocity");
 			var velocity:Velocity = switch (optVelocity) {
 				case Some(v): v;
 				case _: continue;
