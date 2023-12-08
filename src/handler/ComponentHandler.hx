@@ -1,6 +1,5 @@
 package handler;
 
-import js.html.TableRowElement;
 import format.swf.Constants.TagId;
 import haxe.ds.Option;
 import component.IComponent;
